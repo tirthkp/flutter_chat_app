@@ -19,6 +19,7 @@ class SignupForm extends StatelessWidget {
         TextField(
           textInputAction: TextInputAction.next,
           keyboardType: TextInputType.name,
+          textCapitalization: TextCapitalization.words,
           controller: name,
           decoration: const InputDecoration(
             hintText: "Full Name",
@@ -46,7 +47,7 @@ class SignupForm extends StatelessWidget {
         ),
         Obx(
           () => TextField(
-            textInputAction: TextInputAction.send,
+            textInputAction: TextInputAction.done,
             keyboardType: TextInputType.visiblePassword,
             controller: password,
             obscureText: authController.isVisible.value ? true : false,
@@ -55,7 +56,7 @@ class SignupForm extends StatelessWidget {
                 icon: Icon(authController.isVisible.value
                     ? Icons.visibility_off
                     : Icons.visibility),
-                onPressed: () => authController.isvisible(),
+                onPressed: () => authController.isVisible.toggle(),
               ),
               hintText: "Password",
               prefixIcon: const Icon(

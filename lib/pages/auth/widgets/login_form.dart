@@ -40,7 +40,7 @@ class LoginForm extends StatelessWidget {
                 icon: Icon(authController.isVisible.value
                     ? Icons.visibility_off
                     : Icons.visibility),
-                onPressed: () => authController.isvisible(),
+                onPressed: () => authController.isVisible.toggle(),
               ),
               hintText: "Password",
               prefixIcon: const Icon(

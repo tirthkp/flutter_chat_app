@@ -26,7 +26,7 @@ class ChatPage extends StatelessWidget {
           ),
           title: ListTile(
             onTap: () {
-              Get.toNamed('/profilePage');
+              Get.toNamed('/userProfilePage');
             },
             leading: Image.asset(AssetsImage.boyPic),
             title: Text(

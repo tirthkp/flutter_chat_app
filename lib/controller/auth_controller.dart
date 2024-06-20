@@ -14,10 +14,6 @@ class AuthController extends GetxController {
   RxBool isLogin = true.obs;
   RxBool isVisible = true.obs;
 
-  void isvisible() {
-    isVisible.value = !isVisible.value;
-  }
-
   Future<void> login(String email, String password) async {
     isLoading.value = true;
     try {
