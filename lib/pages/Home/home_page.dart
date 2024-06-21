@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/config/strings.dart';
+import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/chat_list.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/tab_bar.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,6 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final auth = FirebaseAuth.instance;
   ProfileController profileController = Get.put(ProfileController());
+  ImageController imageController = Get.put(ImageController());
   @override
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 3, vsync: this);

@@ -1,4 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/config/images.dart';
+import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/widgets/primary_button.dart';
 import 'package:get/get.dart';
@@ -8,6 +12,7 @@ class ProfilePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ImageController imageController = Get.put(ImageController());
     ProfileController profileController = Get.put(ProfileController());
     RxBool isEdit = false.obs;
     TextEditingController name =
@@ -18,6 +23,8 @@ class ProfilePage extends StatelessWidget {
         text: profileController.currentUser.value.phoneNumber);
     TextEditingController bio =
         TextEditingController(text: profileController.currentUser.value.about);
+    RxString imagePath = ''.obs;
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       appBar: AppBar(
@@ -46,14 +53,67 @@ class ProfilePage extends StatelessWidget {
             children: [
               Column(
                 children: [
-                  Center(
-                    child: CircleAvatar(
-                      backgroundColor: Theme.of(context).colorScheme.surface,
-                      radius: 60,
-                      child: const Icon(Icons.add_a_photo),
-                    ),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 120,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Theme.of(context).colorScheme.surface,
+                        ),
+                        child: imagePath.value == ''
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(60),
+                                child: Image.asset(
+                                  AssetsImage.userImg,
+                                  fit: BoxFit.cover,
+                                ),
+                              )
+                            : ClipRRect(
+                                borderRadius: BorderRadius.circular(60),
+                                child: Image.file(
+                                  File(imagePath.value),
+                                  fit: BoxFit.fill,
+                                ),
+                              ),
+                      ),
+                      Container(
+                        height: 120,
+                        width: 120,
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.transparent,
+                        ),
+                        child: Align(
+                          alignment: Alignment.bottomRight,
+                          child: isEdit.value
+                              ? InkWell(
+                                  onTap: () async {
+                                    imagePath.value =
+                                        await imageController.pickImage();
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: Icon(
+                                        Icons.add_a_photo_outlined,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : null,
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
                   TextField(
                     textInputAction: TextInputAction.next,
                     textCapitalization: TextCapitalization.words,
@@ -121,7 +181,7 @@ class ProfilePage extends StatelessWidget {
                       labelText: 'Mobile No.',
                     ),
                   ),
-                  const SizedBox(height: 40),
+                  const SizedBox(height: 60),
                   isEdit.value
                       ? PrimaryButton(
                           btnName: 'Save',
