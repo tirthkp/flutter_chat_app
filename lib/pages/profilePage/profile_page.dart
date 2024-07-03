@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
@@ -48,6 +46,7 @@ class ProfilePage extends StatelessWidget {
         ),
         child: Obx(
           () => ListView(
+            physics: const ClampingScrollPhysics(),
             reverse: true,
             shrinkWrap: true,
             children: [
@@ -62,21 +61,24 @@ class ProfilePage extends StatelessWidget {
                           shape: BoxShape.circle,
                           color: Theme.of(context).colorScheme.surface,
                         ),
-                        child: imagePath.value == ''
-                            ? ClipRRect(
-                                borderRadius: BorderRadius.circular(60),
-                                child: Image.asset(
-                                  AssetsImage.userImg,
-                                  fit: BoxFit.cover,
-                                ),
-                              )
-                            : ClipRRect(
-                                borderRadius: BorderRadius.circular(60),
-                                child: Image.file(
-                                  File(imagePath.value),
-                                  fit: BoxFit.fill,
-                                ),
-                              ),
+                        child:
+                            profileController.currentUser.value.profileImage ==
+                                    ''
+                                ? ClipRRect(
+                                    borderRadius: BorderRadius.circular(60),
+                                    child: Image.asset(
+                                      AssetsImage.userImg,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  )
+                                : ClipRRect(
+                                    borderRadius: BorderRadius.circular(60),
+                                    child: Image.network(
+                                      profileController
+                                          .currentUser.value.profileImage!,
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
                       ),
                       Container(
                         height: 120,
@@ -115,6 +117,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 40),
                   TextField(
+                    style: Theme.of(context).textTheme.bodyLarge,
                     textInputAction: TextInputAction.next,
                     textCapitalization: TextCapitalization.words,
                     controller: name,
@@ -134,6 +137,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   TextField(
+                    style: Theme.of(context).textTheme.bodyLarge,
                     textInputAction: TextInputAction.next,
                     controller: bio,
                     enabled: isEdit.value,
@@ -152,6 +156,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   TextField(
+                    style: Theme.of(context).textTheme.bodyLarge,
                     controller: email,
                     enabled: false,
                     decoration: const InputDecoration(
@@ -165,6 +170,7 @@ class ProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   TextField(
+                    style: Theme.of(context).textTheme.bodyLarge,
                     textInputAction: TextInputAction.done,
                     controller: phone,
                     enabled: isEdit.value,
@@ -188,6 +194,8 @@ class ProfilePage extends StatelessWidget {
                           icon: Icons.save,
                           onTap: () {
                             isEdit.value = false;
+                            profileController.updateProfile(imagePath.value,
+                                name.text, bio.text, phone.text);
                           },
                         )
                       : PrimaryButton(
