@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/config/strings.dart';
+import 'package:flutter_chat_app/controller/auth_controller.dart';
+import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/chat_list.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/tab_bar.dart';
@@ -21,6 +23,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final auth = FirebaseAuth.instance;
   ProfileController profileController = Get.put(ProfileController());
   ImageController imageController = Get.put(ImageController());
+  AuthController authController = Get.put(AuthController());
+  ContactController contactController = Get.put(ContactController());
   @override
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 3, vsync: this);
@@ -46,7 +50,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             ),
           ),
           IconButton(
-            onPressed: () {
+            onPressed: () async {
+              await profileController.getUserDetails();
               Get.toNamed('/profilePage');
             },
             icon: const Icon(
@@ -57,9 +62,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         bottom: myTabBar(tabController, context),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          auth.signOut();
-          Get.offAllNamed('/authPage');
+        onPressed: () async {
+          Get.toNamed('/contactPage');
+          await contactController.getUserList();
         },
         backgroundColor: Theme.of(context).colorScheme.primary,
         child: Icon(

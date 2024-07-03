@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
+import 'package:flutter_chat_app/controller/auth_controller.dart';
+import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/widgets/primary_button.dart';
@@ -22,21 +24,31 @@ class ProfilePage extends StatelessWidget {
     TextEditingController bio =
         TextEditingController(text: profileController.currentUser.value.about);
     RxString imagePath = ''.obs;
+    AuthController authController = Get.put(AuthController());
+    ContactController contactController = Get.put(ContactController());
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
       appBar: AppBar(
-        title: const Text('Profile'),
-        centerTitle: true,
-        scrolledUnderElevation: 0,
-        elevation: 0,
-        leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: const Icon(Icons.arrow_back_ios_new),
-        ),
-      ),
+          title: const Text('Profile'),
+          centerTitle: true,
+          scrolledUnderElevation: 0,
+          elevation: 0,
+          leading: IconButton(
+            onPressed: () async {
+              await contactController.getUserList();
+              Get.back();
+            },
+            icon: const Icon(Icons.arrow_back_ios_new),
+          ),
+          actions: [
+            IconButton(
+              onPressed: () {
+                authController.logoutUser();
+              },
+              icon: const Icon(Icons.logout),
+            ),
+          ]),
       body: Padding(
         padding: const EdgeInsets.only(
           left: 10.0,
@@ -63,7 +75,10 @@ class ProfilePage extends StatelessWidget {
                         ),
                         child:
                             profileController.currentUser.value.profileImage ==
-                                    ''
+                                        null ||
+                                    profileController
+                                            .currentUser.value.profileImage ==
+                                        ''
                                 ? ClipRRect(
                                     borderRadius: BorderRadius.circular(60),
                                     child: Image.asset(
@@ -192,10 +207,25 @@ class ProfilePage extends StatelessWidget {
                       ? PrimaryButton(
                           btnName: 'Save',
                           icon: Icons.save,
-                          onTap: () {
+                          onTap: () async {
+                            await profileController.updateProfile(
+                                imagePath.value,
+                                name.text,
+                                bio.text,
+                                phone.text,
+                                email.text);
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  'Saved successfully...',
+                                  style: Theme.of(context).textTheme.bodyMedium,
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.surface,
+                                duration: const Duration(seconds: 3),
+                              ),
+                            );
                             isEdit.value = false;
-                            profileController.updateProfile(imagePath.value,
-                                name.text, bio.text, phone.text);
                           },
                         )
                       : PrimaryButton(

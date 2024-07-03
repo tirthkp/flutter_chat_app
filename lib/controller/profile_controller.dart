@@ -35,6 +35,7 @@ class ProfileController extends GetxController {
     String name,
     String about,
     String number,
+    String email,
   ) async {
     isLoading.value = true;
     try {
@@ -42,13 +43,17 @@ class ProfileController extends GetxController {
       final updatedUser = UserModel(
         name: name,
         about: about,
-        profileImage: imageLink,
+        profileImage:
+            imageUrl == '' ? currentUser.value.profileImage : imageLink,
         phoneNumber: number,
+        email: auth.currentUser!.email,
+        id: auth.currentUser!.uid,
       );
       await db
           .collection('users')
           .doc(auth.currentUser!.uid)
-          .set(updatedUser.toJson());
+          .update(updatedUser.toJson());
+      await getUserDetails();
     } catch (e) {
       print(e.toString());
     }
