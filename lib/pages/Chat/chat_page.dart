@@ -3,6 +3,7 @@ import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/controller/chat_controller.dart';
 import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/pages/Chat/widgets/chat_bubble.dart';
+import 'package:flutter_chat_app/pages/userProfile/user_profile.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
@@ -34,7 +35,7 @@ class ChatPage extends StatelessWidget {
           ),
           title: ListTile(
             onTap: () {
-              Get.toNamed('/userProfilePage');
+              Get.to(() => UserProfile(userModel: userModel));
             },
             leading:
                 userModel.profileImage != null && userModel.profileImage != ''
@@ -142,6 +143,7 @@ class ChatPage extends StatelessWidget {
                           chatController.sendMessage(
                             userModel.id!,
                             message.text,
+                            userModel,
                           );
                           message.clear();
                         } else {
@@ -179,8 +181,7 @@ class ChatPage extends StatelessWidget {
                   child: Text("Error:${snapshot.error}"),
                 );
               }
-              if (snapshot.hasData) {
-                print(snapshot.data);
+              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
                 return ListView.builder(
                   reverse: true,
                   shrinkWrap: true,
@@ -196,12 +197,8 @@ class ChatPage extends StatelessWidget {
                   },
                 );
               } else {
-                return Center(
-                  child: Container(
-                    height: 50,
-                    color: Colors.red,
-                    child: const Text('Start Chatting'),
-                  ),
+                return const Center(
+                  child: Text('Start chating'),
                 );
               }
             },

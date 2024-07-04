@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/model/chat_model.dart';
+import 'package:flutter_chat_app/model/chat_room_model.dart';
+import 'package:flutter_chat_app/model/user_model.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
@@ -22,7 +24,8 @@ class ChatController extends GetxController {
     }
   }
 
-  Future<void> sendMessage(String targetUserId, String message) async {
+  Future<void> sendMessage(
+      String targetUserId, String message, UserModel targetUser) async {
     isLoading.value = true;
     String chatId = uuid.v6();
     String roomId = getRoomId(targetUserId);
@@ -34,7 +37,20 @@ class ChatController extends GetxController {
       senderName: profileController.currentUser.value.name,
       timeStamp: DateFormat('HH:mm a').format(DateTime.now()),
     );
+
+    var roomDetails = ChatRoomModel(
+      id: roomId,
+      lastMessage: message,
+      lastMessageTime: DateFormat('HH:mm a').format(DateTime.now()),
+      sender: profileController.currentUser.value,
+      receiver: targetUser,
+      unreadMessageNo: 0,
+      timeStamp: DateFormat('HH:mm a').format(DateTime.now()),
+    );
     try {
+      await db.collection('chats').doc(roomId).set(
+            roomDetails.toJson(),
+          );
       await db
           .collection('chats')
           .doc(roomId)

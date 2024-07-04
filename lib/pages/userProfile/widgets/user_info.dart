@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/pages/userProfile/widgets/call_buttons.dart';
-import 'package:get/get.dart';
-
-import '../../../config/images.dart';
 
 class UserInfo extends StatelessWidget {
-  const UserInfo({super.key});
+  final String profileImage;
+  final String name;
+  final String email;
+  const UserInfo(
+      {super.key,
+      required this.profileImage,
+      required this.name,
+      required this.email});
 
   @override
   Widget build(BuildContext context) {
-    ProfileController profileController = Get.put(ProfileController());
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -21,19 +23,23 @@ class UserInfo extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
-            Image.asset(AssetsImage.boyPic),
-            const SizedBox(height: 20),
-            Obx(
-              () => Text(
-                profileController.currentUser.value.name ?? 'User',
-                style: Theme.of(context).textTheme.bodyLarge,
+            Container(
+              height: 120,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(profileImage),
+                ),
+                shape: BoxShape.circle,
               ),
             ),
-            Obx(
-              () => Text(
-                profileController.currentUser.value.email!,
-                style: Theme.of(context).textTheme.labelLarge,
-              ),
+            const SizedBox(height: 20),
+            Text(
+              name,
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            Text(
+              email,
+              style: Theme.of(context).textTheme.labelLarge,
             ),
             const SizedBox(height: 20),
             Row(

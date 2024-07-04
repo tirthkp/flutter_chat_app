@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/pages/userProfile/widgets/logout_button.dart';
 import 'package:flutter_chat_app/pages/userProfile/widgets/user_info.dart';
 import 'package:get/get.dart';
 
+import '../../model/user_model.dart';
+
 class UserProfile extends StatelessWidget {
-  const UserProfile({super.key});
+  final UserModel userModel;
+  const UserProfile({
+    super.key,
+    required this.userModel,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +24,8 @@ class UserProfile extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_ios_new),
         ),
       ),
-      body: const Padding(
-        padding: EdgeInsets.only(
+      body: Padding(
+        padding: const EdgeInsets.only(
           top: 10.0,
           left: 10,
           right: 10,
@@ -28,9 +33,13 @@ class UserProfile extends StatelessWidget {
         ),
         child: Column(
           children: [
-            UserInfo(),
-            Spacer(),
-            LogoutButton(),
+            UserInfo(
+              email: userModel.email!,
+              name: userModel.name!,
+              profileImage: userModel.profileImage!,
+            ),
+            const Spacer(),
+            // LogoutButton(),
           ],
         ),
       ),

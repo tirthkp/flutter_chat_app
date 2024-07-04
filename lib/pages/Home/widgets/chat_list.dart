@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/controller/contact_controller.dart';
+import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/pages/Chat/chat_page.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +16,7 @@ class ChatList extends StatelessWidget {
   Widget build(BuildContext context) {
     ContactController contactController = Get.put(ContactController());
     ChatController chatController = Get.put(ChatController());
+    ProfileController profileController = Get.put(ProfileController());
     return Obx(
       () => ListView(
         shrinkWrap: true,
@@ -59,8 +61,10 @@ class ChatList extends StatelessWidget {
                   ),
                   tileColor: Theme.of(context).colorScheme.primaryContainer,
                   trailing: Text(
-                    '',
-                    style: Theme.of(context).textTheme.labelMedium,
+                    e.email == profileController.currentUser.value.email
+                        ? 'You'
+                        : '',
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
