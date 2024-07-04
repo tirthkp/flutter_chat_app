@@ -1,3 +1,7 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/controller/auth_controller.dart';
@@ -24,6 +28,7 @@ class ProfilePage extends StatelessWidget {
     TextEditingController bio =
         TextEditingController(text: profileController.currentUser.value.about);
     RxString imagePath = ''.obs;
+    RxString localImagePath = ''.obs;
     AuthController authController = Get.put(AuthController());
     ContactController contactController = Get.put(ContactController());
 
@@ -79,21 +84,37 @@ class ProfilePage extends StatelessWidget {
                                     profileController
                                             .currentUser.value.profileImage ==
                                         ''
-                                ? ClipRRect(
-                                    borderRadius: BorderRadius.circular(60),
-                                    child: Image.asset(
-                                      AssetsImage.userImg,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  )
-                                : ClipRRect(
-                                    borderRadius: BorderRadius.circular(60),
-                                    child: Image.network(
-                                      profileController
-                                          .currentUser.value.profileImage!,
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
+                                ? localImagePath.value == ''
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(60),
+                                        child: Image.asset(
+                                          AssetsImage.userImg,
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.circular(60),
+                                        child: Image.file(
+                                          File(localImagePath.value),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                : localImagePath.value != ''
+                                    ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(60),
+                                        child: Image.file(
+                                          File(localImagePath.value),
+                                          fit: BoxFit.cover,
+                                        ),
+                                      )
+                                    : ClipRRect(
+                                        borderRadius: BorderRadius.circular(60),
+                                        child: Image.network(
+                                          profileController
+                                              .currentUser.value.profileImage!,
+                                          fit: BoxFit.fill,
+                                        ),
+                                      ),
                       ),
                       Container(
                         height: 120,
@@ -109,6 +130,7 @@ class ProfilePage extends StatelessWidget {
                                   onTap: () async {
                                     imagePath.value =
                                         await imageController.pickImage();
+                                    localImagePath.value = imagePath.value;
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
@@ -204,30 +226,34 @@ class ProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 60),
                   isEdit.value
-                      ? PrimaryButton(
-                          btnName: 'Save',
-                          icon: Icons.save,
-                          onTap: () async {
-                            await profileController.updateProfile(
-                                imagePath.value,
-                                name.text,
-                                bio.text,
-                                phone.text,
-                                email.text);
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Saved successfully...',
-                                  style: Theme.of(context).textTheme.bodyMedium,
-                                ),
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.surface,
-                                duration: const Duration(seconds: 3),
-                              ),
-                            );
-                            isEdit.value = false;
-                          },
-                        )
+                      ? profileController.isLoading.value
+                          ? const CircularProgressIndicator()
+                          : PrimaryButton(
+                              btnName: 'Save',
+                              icon: Icons.save,
+                              onTap: () async {
+                                await profileController.updateProfile(
+                                    imagePath.value,
+                                    name.text,
+                                    bio.text,
+                                    phone.text,
+                                    email.text);
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      'Saved successfully...',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
+                                    ),
+                                    backgroundColor:
+                                        Theme.of(context).colorScheme.surface,
+                                    duration: const Duration(seconds: 3),
+                                  ),
+                                );
+                                isEdit.value = false;
+                              },
+                            )
                       : PrimaryButton(
                           btnName: 'Edit',
                           icon: Icons.edit,

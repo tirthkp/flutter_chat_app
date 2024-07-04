@@ -47,21 +47,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             onPressed: () {},
             icon: const Icon(
               Icons.search,
+              size: 30,
             ),
           ),
           IconButton(
             onPressed: () async {
-              await profileController.getUserDetails();
               Get.toNamed('/profilePage');
+              await profileController.getUserDetails();
             },
             icon: const Icon(
-              Icons.more_vert,
+              Icons.person,
+              size: 30,
             ),
           ),
         ],
         bottom: myTabBar(tabController, context),
       ),
       floatingActionButton: FloatingActionButton(
+        elevation: 0,
         onPressed: () async {
           Get.toNamed('/contactPage');
           await contactController.getUserList();

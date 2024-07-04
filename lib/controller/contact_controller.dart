@@ -32,6 +32,7 @@ class ContactController extends GetxController {
                   .toList(),
             },
           );
+      isLoading.value = false;
     } catch (e) {
       print(e);
     }

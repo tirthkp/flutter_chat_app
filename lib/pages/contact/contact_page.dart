@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/chat_list.dart';
@@ -65,7 +63,11 @@ class ContactPage extends StatelessWidget {
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             const SizedBox(height: 15),
-            const ChatList(),
+            Obx(
+              () => contactController.isLoading.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : const ChatList(),
+            ),
           ],
         ),
       ),
