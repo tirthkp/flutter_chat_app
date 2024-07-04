@@ -1,4 +1,3 @@
-import 'package:flutter_chat_app/pages/Chat/chat_page.dart';
 import 'package:flutter_chat_app/pages/Home/home_page.dart';
 import 'package:flutter_chat_app/pages/contact/contact_page.dart';
 import 'package:flutter_chat_app/pages/profilePage/profile_page.dart';
@@ -19,11 +18,11 @@ var pagePath = [
     page: () => const HomePage(),
     transition: Transition.rightToLeft,
   ),
-  GetPage(
-    name: '/chatPage',
-    page: () => const ChatPage(),
-    transition: Transition.rightToLeft,
-  ),
+  // GetPage(
+  //   name: '/chatPage',
+  //   page: () => const ChatPage(),
+  //   transition: Transition.rightToLeft,
+  // ),
   GetPage(
     name: '/userProfilePage',
     page: () => const UserProfile(),

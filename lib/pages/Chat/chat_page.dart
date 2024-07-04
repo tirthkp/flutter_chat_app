@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
+import 'package:flutter_chat_app/controller/chat_controller.dart';
+import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/pages/Chat/widgets/chat_bubble.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
+import '../../model/user_model.dart';
+
 class ChatPage extends StatelessWidget {
-  const ChatPage({super.key});
+  final UserModel userModel;
+  const ChatPage({super.key, required this.userModel});
 
   @override
   Widget build(BuildContext context) {
+    ChatController chatController = Get.put(ChatController());
+    TextEditingController message = TextEditingController();
+    ProfileController profileController = Get.put(ProfileController());
     return GestureDetector(
       onTap: FocusScope.of(context).unfocus,
       child: Scaffold(
@@ -28,9 +36,25 @@ class ChatPage extends StatelessWidget {
             onTap: () {
               Get.toNamed('/userProfilePage');
             },
-            leading: Image.asset(AssetsImage.boyPic),
+            leading:
+                userModel.profileImage != null && userModel.profileImage != ''
+                    ? Container(
+                        height: 60,
+                        width: 60,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              image: NetworkImage(userModel.profileImage!),
+                              fit: BoxFit.cover),
+                        ),
+                      )
+                    : Container(
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                        ),
+                        child: Image.asset(AssetsImage.userImg)),
             title: Text(
-              "Tirth Patel",
+              userModel.name ?? 'User',
               style: Theme.of(context).textTheme.bodyLarge,
             ),
             subtitle: Text(
@@ -80,12 +104,13 @@ class ChatPage extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 10),
-                  const Expanded(
+                  Expanded(
                     child: TextField(
+                      controller: message,
                       keyboardType: TextInputType.multiline,
                       minLines: 1,
-                      maxLines: 30,
-                      decoration: InputDecoration(
+                      maxLines: 3,
+                      decoration: const InputDecoration(
                         border: InputBorder.none,
                         filled: false,
                         hintText: "Type your message...",
@@ -110,13 +135,27 @@ class ChatPage extends StatelessWidget {
                   const SizedBox(width: 10),
                   Padding(
                     padding: const EdgeInsets.only(bottom: 8.0),
-                    child: SizedBox(
-                      height: 30,
-                      width: 30,
-                      child: SvgPicture.asset(
-                        AssetsImage.sendIcon,
+                    child: InkWell(
+                      onTap: () {
+                        String msg = message.text.trim();
+                        if (msg.isNotEmpty) {
+                          chatController.sendMessage(
+                            userModel.id!,
+                            message.text,
+                          );
+                          message.clear();
+                        } else {
+                          message.clear();
+                        }
+                      },
+                      child: SizedBox(
                         height: 30,
                         width: 30,
+                        child: SvgPicture.asset(
+                          AssetsImage.sendIcon,
+                          height: 30,
+                          width: 30,
+                        ),
                       ),
                     ),
                   ),
@@ -127,46 +166,45 @@ class ChatPage extends StatelessWidget {
         ),
         body: Padding(
           padding: const EdgeInsets.all(10.0),
-          child: ListView(
-            shrinkWrap: true,
-            reverse: true,
-            children: const [
-              ChatBubble(
-                message: 'Hello',
-                inComming: true,
-                time: '8:00 AM',
-                status: 'Seen',
-                imageUrl: "",
-              ),
-              ChatBubble(
-                message: 'Hello',
-                inComming: false,
-                time: '8:00 AM',
-                status: 'Seen',
-                imageUrl: "",
-              ),
-              ChatBubble(
-                message: 'Hello',
-                inComming: false,
-                time: '8:00 AM',
-                status: 'Seen',
-                imageUrl: "",
-              ),
-              ChatBubble(
-                message: 'Hello',
-                inComming: false,
-                time: '8:00 AM',
-                status: 'Seen',
-                imageUrl: "https://th.bing.com/th/id/OIG4.LgUj9FIjzUbdTSMn0mRg",
-              ),
-              ChatBubble(
-                message: 'Hello',
-                inComming: true,
-                time: '8:00 AM',
-                status: 'Seen',
-                imageUrl: "https://th.bing.com/th/id/OIG4.LgUj9FIjzUbdTSMn0mRg",
-              ),
-            ].reversed.toList(),
+          child: StreamBuilder(
+            stream: chatController.getMessages(userModel.id!),
+            builder: (context, snapshot) {
+              // if (snapshot.connectionState == ConnectionState.waiting) {
+              //   return const Center(
+              //     child: CircularProgressIndicator(),
+              //   );
+              // }
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text("Error:${snapshot.error}"),
+                );
+              }
+              if (snapshot.hasData) {
+                print(snapshot.data);
+                return ListView.builder(
+                  reverse: true,
+                  shrinkWrap: true,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return ChatBubble(
+                        message: snapshot.data![index].message!,
+                        inComming: snapshot.data![index].senderId !=
+                            profileController.currentUser.value.id,
+                        time: snapshot.data![index].timeStamp!,
+                        status: '',
+                        imageUrl: snapshot.data![index].imageUrl ?? '');
+                  },
+                );
+              } else {
+                return Center(
+                  child: Container(
+                    height: 50,
+                    color: Colors.red,
+                    child: const Text('Start Chatting'),
+                  ),
+                );
+              }
+            },
           ),
         ),
       ),

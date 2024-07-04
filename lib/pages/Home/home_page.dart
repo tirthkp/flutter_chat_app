@@ -80,7 +80,11 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         child: TabBarView(
           controller: tabController,
           children: [
-            const ChatList(),
+            Obx(
+              () => contactController.isLoading.value
+                  ? const Center(child: CircularProgressIndicator())
+                  : const ChatList(),
+            ),
             ListView(
               children: const [
                 ListTile(

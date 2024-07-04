@@ -11,6 +11,7 @@ class ContactPage extends StatelessWidget {
   Widget build(BuildContext context) {
     RxBool isSearch = false.obs;
     ContactController contactController = Get.put(ContactController());
+
     return Scaffold(
       appBar: AppBar(
         scrolledUnderElevation: 0,

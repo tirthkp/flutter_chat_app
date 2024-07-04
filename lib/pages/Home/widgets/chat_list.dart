@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/controller/contact_controller.dart';
+import 'package:flutter_chat_app/pages/Chat/chat_page.dart';
 import 'package:get/get.dart';
+
+import '../../../controller/chat_controller.dart';
 
 class ChatList extends StatelessWidget {
   const ChatList({
@@ -11,6 +14,7 @@ class ChatList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ContactController contactController = Get.put(ContactController());
+    ChatController chatController = Get.put(ChatController());
     return Obx(
       () => ListView(
         shrinkWrap: true,
@@ -21,7 +25,8 @@ class ChatList extends StatelessWidget {
                 padding: const EdgeInsets.all(8.0),
                 child: ListTile(
                   onTap: () {
-                    Get.toNamed('/chatPage');
+                    Get.to(() => ChatPage(userModel: e));
+                    chatController.getRoomId(e.id!);
                   },
                   horizontalTitleGap: 15,
                   leading: e.profileImage != null && e.profileImage != ''
