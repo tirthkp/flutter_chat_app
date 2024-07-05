@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/controller/auth_controller.dart';
@@ -30,7 +31,7 @@ class ProfilePage extends StatelessWidget {
     RxString imagePath = ''.obs;
     RxString localImagePath = ''.obs;
     AuthController authController = Get.put(AuthController());
-    ContactController contactController = Get.put(ContactController());
+    Get.put(ContactController());
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.primaryContainer,
@@ -41,7 +42,6 @@ class ProfilePage extends StatelessWidget {
           elevation: 0,
           leading: IconButton(
             onPressed: () async {
-              await contactController.getUserList();
               Get.back();
             },
             icon: const Icon(Icons.arrow_back_ios_new),
@@ -109,10 +109,16 @@ class ProfilePage extends StatelessWidget {
                                       )
                                     : ClipRRect(
                                         borderRadius: BorderRadius.circular(60),
-                                        child: Image.network(
-                                          profileController
+                                        child: CachedNetworkImage(
+                                          imageUrl: profileController
                                               .currentUser.value.profileImage!,
-                                          fit: BoxFit.fill,
+                                          placeholder: (context, url) =>
+                                              const Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
+                                          fit: BoxFit.cover,
                                         ),
                                       ),
                       ),
@@ -207,6 +213,22 @@ class ProfilePage extends StatelessWidget {
                   ),
                   const SizedBox(height: 15),
                   TextField(
+                    onSubmitted: (value) async {
+                      await profileController.updateProfile(imagePath.value,
+                          name.text, bio.text, phone.text, email.text);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Saved successfully...',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          backgroundColor:
+                              Theme.of(context).colorScheme.surface,
+                          duration: const Duration(seconds: 3),
+                        ),
+                      );
+                      isEdit.value = false;
+                    },
                     style: Theme.of(context).textTheme.bodyLarge,
                     textInputAction: TextInputAction.done,
                     controller: phone,

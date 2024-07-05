@@ -36,7 +36,8 @@ class UserProfile extends StatelessWidget {
             UserInfo(
               email: userModel.email!,
               name: userModel.name!,
-              profileImage: userModel.profileImage!,
+              profileImage: userModel.profileImage ?? '',
+              userModel: userModel,
             ),
             const Spacer(),
             // LogoutButton(),

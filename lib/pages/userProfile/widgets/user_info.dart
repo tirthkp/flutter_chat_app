@@ -1,15 +1,21 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/model/user_model.dart';
 import 'package:flutter_chat_app/pages/userProfile/widgets/call_buttons.dart';
+
+import '../../../config/images.dart';
 
 class UserInfo extends StatelessWidget {
   final String profileImage;
   final String name;
   final String email;
+  final UserModel userModel;
   const UserInfo(
       {super.key,
       required this.profileImage,
       required this.name,
-      required this.email});
+      required this.email,
+      required this.userModel});
 
   @override
   Widget build(BuildContext context) {
@@ -23,15 +29,39 @@ class UserInfo extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
-            Container(
-              height: 120,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(profileImage),
-                ),
-                shape: BoxShape.circle,
-              ),
-            ),
+            userModel.profileImage != null && userModel.profileImage != ''
+                ? CachedNetworkImage(
+                    imageUrl: userModel.profileImage!,
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        height: 120,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.cover,
+                  )
+                : Container(
+                    height: 120,
+                    width: 120,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: AssetImage(AssetsImage.userImg),
+                        fit: BoxFit.scaleDown,
+                      ),
+                    ),
+                  ),
             const SizedBox(height: 20),
             Text(
               name,

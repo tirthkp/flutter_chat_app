@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/controller/contact_controller.dart';
-import 'package:flutter_chat_app/pages/Home/widgets/chat_list.dart';
+import 'package:flutter_chat_app/controller/home_controller.dart';
+import 'package:flutter_chat_app/pages/contact/widgets/contact_list.dart';
 import 'package:flutter_chat_app/pages/contact/widgets/new_contact_tile.dart';
 import 'package:get/get.dart';
 
@@ -16,7 +17,9 @@ class ContactPage extends StatelessWidget {
       appBar: AppBar(
         scrolledUnderElevation: 0,
         leading: IconButton(
-            onPressed: () {
+            onPressed: () async {
+              HomeController homeController = Get.put(HomeController());
+              await homeController.getChatRoomList();
               Get.back();
             },
             icon: const Icon(Icons.arrow_back_ios_new)),
@@ -67,7 +70,7 @@ class ContactPage extends StatelessWidget {
             Obx(
               () => contactController.isLoading.value
                   ? const Center(child: CircularProgressIndicator())
-                  : const ChatList(),
+                  : const ContactList(),
             ),
           ],
         ),

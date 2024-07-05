@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_chat_app/model/chat_room_model.dart';
 import 'package:get/get.dart';
 
 import '../model/user_model.dart';
@@ -10,6 +11,7 @@ class ContactController extends GetxController {
 
   RxList<UserModel> userList = <UserModel>[].obs;
   RxBool isLoading = false.obs;
+  RxList<ChatRoomModel> chatRoomList = <ChatRoomModel>[].obs;
 
   @override
   void onInit() async {
