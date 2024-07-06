@@ -8,12 +8,27 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
+import '../config/images.dart';
+
 class ChatController extends GetxController {
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
   RxBool isLoading = false.obs;
   var uuid = const Uuid();
   ProfileController profileController = Get.put(ProfileController());
+
+  String imgUrl(ChatRoomModel e) {
+    if ((e.receiver!.id == profileController.currentUser.value.id
+            ? e.sender!.profileImage
+            : e.receiver!.profileImage) ==
+        '') {
+      return AssetsImage.userImg;
+    } else if ((e.receiver!.id == profileController.currentUser.value.id)) {
+      return e.sender!.profileImage!;
+    } else {
+      return e.receiver!.profileImage!;
+    }
+  }
 
   String getRoomId(String targetUserId) {
     String currentUserId = auth.currentUser!.uid;
@@ -24,11 +39,36 @@ class ChatController extends GetxController {
     }
   }
 
+  UserModel getSender(UserModel currentUser, UserModel targetUser) {
+    String currentUserId = currentUser.id!;
+    String targetUserId = targetUser.id!;
+    if (currentUserId[0].codeUnitAt(0) > targetUserId[0].codeUnitAt(0)) {
+      return currentUser;
+    } else {
+      return targetUser;
+    }
+  }
+
+  UserModel getReceiver(UserModel currentUser, UserModel targetUser) {
+    String currentUserId = currentUser.id!;
+    String targetUserId = targetUser.id!;
+    if (currentUserId[0].codeUnitAt(0) > targetUserId[0].codeUnitAt(0)) {
+      return targetUser;
+    } else {
+      return currentUser;
+    }
+  }
+
   Future<void> sendMessage(
       String targetUserId, String message, UserModel targetUser) async {
     isLoading.value = true;
     String chatId = uuid.v6();
     String roomId = getRoomId(targetUserId);
+
+    UserModel sender =
+        getSender(profileController.currentUser.value, targetUser);
+    UserModel receiver =
+        getReceiver(profileController.currentUser.value, targetUser);
     var newChat = ChatModel(
       message: message,
       id: chatId,
@@ -42,8 +82,8 @@ class ChatController extends GetxController {
       id: roomId,
       lastMessage: message,
       lastMessageTime: DateFormat('HH:mm a').format(DateTime.now()),
-      sender: profileController.currentUser.value,
-      receiver: targetUser,
+      sender: sender,
+      receiver: receiver,
       unreadMessageNo: 0,
       timeStamp: DateFormat('HH:mm a').format(DateTime.now()),
     );

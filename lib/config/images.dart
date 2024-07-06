@@ -16,5 +16,6 @@ class AssetsImage {
   static const chatStatusIcon = '$iconsPath/chat_status.svg';
 
   //jpg images only
-  static const userImg = "$imagesPath/user.jpg";
+  static const userImg =
+      "https://firebasestorage.googleapis.com/v0/b/chat-app-8525b.appspot.com/o/user.jpg?alt=media&token=a4237aeb-ddc8-4e4a-b933-5fd651236d73";
 }

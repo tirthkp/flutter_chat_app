@@ -22,7 +22,11 @@ class HomeController extends GetxController {
 
     isLoading.value = true;
     try {
-      await db.collection('chats').get().then(
+      await db
+          .collection('chats')
+          .orderBy('timeStamp', descending: true)
+          .get()
+          .then(
         (value) {
           tempChatRoom =
               value.docs.map((e) => ChatRoomModel.fromJson(e.data())).toList();

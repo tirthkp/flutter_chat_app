@@ -61,7 +61,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                 decoration: const BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: AssetImage(AssetsImage.userImg),
+                    image: NetworkImage(AssetsImage.userImg),
                     fit: BoxFit.scaleDown,
                   ),
                 ),

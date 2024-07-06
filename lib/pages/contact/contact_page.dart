@@ -19,8 +19,8 @@ class ContactPage extends StatelessWidget {
         leading: IconButton(
             onPressed: () async {
               HomeController homeController = Get.put(HomeController());
-              await homeController.getChatRoomList();
               Get.back();
+              await homeController.getChatRoomList();
             },
             icon: const Icon(Icons.arrow_back_ios_new)),
         title: const Text('Select Contacts'),
