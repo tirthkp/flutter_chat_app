@@ -55,16 +55,25 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
                 errorWidget: (context, url, error) => const Icon(Icons.error),
                 fit: BoxFit.cover,
               )
-            : Container(
-                height: 60,
-                width: 60,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    image: NetworkImage(AssetsImage.userImg),
-                    fit: BoxFit.scaleDown,
-                  ),
-                ),
+            : CachedNetworkImage(
+                imageUrl: AssetsImage.userImg,
+                imageBuilder: (context, imageProvider) {
+                  return Container(
+                    height: 60,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      image: DecorationImage(
+                        image: imageProvider,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  );
+                },
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
+                fit: BoxFit.cover,
               ),
         title: Text(
           userModel.name ?? 'User',

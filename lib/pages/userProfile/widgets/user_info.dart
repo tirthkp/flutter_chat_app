@@ -51,16 +51,26 @@ class UserInfo extends StatelessWidget {
                         const Icon(Icons.error),
                     fit: BoxFit.cover,
                   )
-                : Container(
-                    height: 120,
-                    width: 120,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      image: DecorationImage(
-                        image: NetworkImage(AssetsImage.userImg),
-                        fit: BoxFit.scaleDown,
-                      ),
-                    ),
+                : CachedNetworkImage(
+                    imageUrl: AssetsImage.userImg,
+                    imageBuilder: (context, imageProvider) {
+                      return Container(
+                        height: 120,
+                        width: 120,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            image: imageProvider,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                    fit: BoxFit.cover,
                   ),
             const SizedBox(height: 20),
             Text(

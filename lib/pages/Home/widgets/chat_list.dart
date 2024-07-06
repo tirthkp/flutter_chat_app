@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/controller/chat_controller.dart';
@@ -44,27 +45,47 @@ class ChatList extends StatelessWidget {
                             e.receiver!.profileImage != '' ||
                         e.sender!.profileImage != null &&
                             e.sender!.profileImage != ''
-                    ? Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                chatController.imgUrl(e),
+                    ? CachedNetworkImage(
+                        imageUrl: chatController.imgUrl(e),
+                        imageBuilder: (context, imageProvider) {
+                          return Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
                               ),
-                              fit: BoxFit.cover),
-                        ),
+                            ),
+                          );
+                        },
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        fit: BoxFit.cover,
                       )
-                    : Container(
-                        height: 60,
-                        width: 60,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: NetworkImage(AssetsImage.userImg),
-                          ),
-                        ),
+                    : CachedNetworkImage(
+                        imageUrl: AssetsImage.userImg,
+                        imageBuilder: (context, imageProvider) {
+                          return Container(
+                            height: 60,
+                            width: 60,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              image: DecorationImage(
+                                image: imageProvider,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          );
+                        },
+                        placeholder: (context, url) =>
+                            const CircularProgressIndicator(),
+                        errorWidget: (context, url, error) =>
+                            const Icon(Icons.error),
+                        fit: BoxFit.cover,
                       ),
                 title: Text(
                   (e.receiver!.id == profileController.currentUser.value.id

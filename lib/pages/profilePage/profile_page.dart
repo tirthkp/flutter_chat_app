@@ -87,7 +87,7 @@ class ProfilePage extends StatelessWidget {
                                 ? localImagePath.value == ''
                                     ? ClipRRect(
                                         borderRadius: BorderRadius.circular(60),
-                                        child: Image.asset(
+                                        child: Image.network(
                                           AssetsImage.userImg,
                                           fit: BoxFit.cover,
                                         ),
