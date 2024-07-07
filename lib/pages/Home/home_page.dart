@@ -7,6 +7,7 @@ import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/home_controller.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/chat_list.dart';
+import 'package:flutter_chat_app/pages/Home/widgets/default_home_screen.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/tab_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -30,85 +31,89 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 3, vsync: this);
-    return Scaffold(
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          AppStrings.appName,
-          style: Theme.of(context).textTheme.headlineSmall,
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: SvgPicture.asset(
-            AssetsImage.appIcon,
+    return Obx(
+      () => Scaffold(
+        appBar: AppBar(
+          elevation: 0,
+          title: Text(
+            AppStrings.appName,
+            style: Theme.of(context).textTheme.headlineSmall,
           ),
-        ),
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        actions: [
-          IconButton(
-            onPressed: () {
-              homeController.getChatRoomList();
-            },
-            icon: const Icon(
-              Icons.search,
-              size: 30,
+          leading: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SvgPicture.asset(
+              AssetsImage.appIcon,
             ),
           ),
-          IconButton(
-            onPressed: () async {
-              Get.toNamed('/profilePage');
-              await profileController.getUserDetails();
-            },
-            icon: const Icon(
-              Icons.person,
-              size: 30,
+          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+          actions: [
+            IconButton(
+              onPressed: () {
+                homeController.getChatRoomList();
+              },
+              icon: const Icon(
+                Icons.search,
+                size: 30,
+              ),
             ),
-          ),
-        ],
-        bottom: myTabBar(tabController, context),
-      ),
-      floatingActionButton: FloatingActionButton(
-        elevation: 0,
-        onPressed: () async {
-          Get.toNamed('/contactPage');
-          await contactController.getUserList();
-        },
-        backgroundColor: Theme.of(context).colorScheme.primary,
-        child: Icon(
-          Icons.add,
-          color: Theme.of(context).colorScheme.onSurface,
+            IconButton(
+              onPressed: () async {
+                Get.toNamed('/profilePage');
+                await profileController.getUserDetails();
+              },
+              icon: const Icon(
+                Icons.person,
+                size: 30,
+              ),
+            ),
+          ],
+          bottom: myTabBar(tabController, context),
         ),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: TabBarView(
-          controller: tabController,
-          children: [
-            Obx(
-              () => contactController.isLoading.value
+        floatingActionButton: homeController.chatRoomList.isEmpty
+            ? null
+            : FloatingActionButton(
+                elevation: 0,
+                onPressed: () async {
+                  Get.toNamed('/contactPage');
+                  await contactController.getUserList();
+                },
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                child: Icon(
+                  Icons.add,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+        body: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: TabBarView(
+            controller: tabController,
+            children: [
+              contactController.isLoading.value
                   ? const Center(child: CircularProgressIndicator())
                   : RefreshIndicator(
-                      child: const ChatList(),
+                      child: homeController.chatRoomList.isEmpty
+                          ? const DefaultHomeScreen()
+                          : const ChatList(),
                       onRefresh: () async {
                         await Future.delayed(const Duration(seconds: 2));
                         await homeController.getChatRoomList();
                       }),
-            ),
-            ListView(
-              children: const [
-                ListTile(
-                  title: Text('Name'),
-                ),
-              ],
-            ),
-            ListView(
-              children: const [
-                ListTile(
-                  title: Text('Name'),
-                ),
-              ],
-            ),
-          ],
+              ListView(
+                children: const [
+                  ListTile(
+                    title: Text('Groups'),
+                  ),
+                ],
+              ),
+              ListView(
+                children: const [
+                  ListTile(
+                    title: Text('Calls'),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

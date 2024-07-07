@@ -16,7 +16,7 @@ var pagePath = [
   GetPage(
     name: '/homePage',
     page: () => const HomePage(),
-    transition: Transition.rightToLeft,
+    transition: Transition.leftToRight,
   ),
   GetPage(
     name: '/updateUserProfilePage',

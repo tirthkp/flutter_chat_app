@@ -30,6 +30,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
       ),
       title: ListTile(
+        splashColor: Colors.transparent,
         onTap: () {
           Get.to(() => UserProfile(userModel: userModel),
               transition: Transition.rightToLeft);

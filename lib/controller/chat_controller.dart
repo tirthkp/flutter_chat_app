@@ -85,7 +85,7 @@ class ChatController extends GetxController {
       sender: sender,
       receiver: receiver,
       unreadMessageNo: 0,
-      timeStamp: DateFormat('HH:mm a').format(DateTime.now()),
+      timeStamp: DateTime.now().toString(),
     );
     try {
       await db.collection('chats').doc(roomId).set(

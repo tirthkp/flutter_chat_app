@@ -14,6 +14,8 @@ class BottomNavbar extends StatelessWidget {
   Widget build(BuildContext context) {
     TextEditingController message = TextEditingController();
     ChatController chatController = Get.put(ChatController());
+    ScrollController scrollController = ScrollController();
+    RxString mess = ''.obs;
 
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
@@ -33,24 +35,37 @@ class BottomNavbar extends StatelessWidget {
                 child: SizedBox(
                   height: 30,
                   width: 30,
-                  child: SvgPicture.asset(
-                    AssetsImage.micIcon,
-                    height: 30,
-                    width: 30,
+                  child: InkWell(
+                    onTap: () {},
+                    child: Icon(
+                      Icons.emoji_emotions_rounded,
+                      size: 30,
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
                   ),
                 ),
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: TextField(
-                  controller: message,
-                  keyboardType: TextInputType.multiline,
-                  minLines: 1,
-                  maxLines: 3,
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    filled: false,
-                    hintText: "Type your message...",
+                child: Scrollbar(
+                  interactive: true,
+                  thumbVisibility: true,
+                  trackVisibility: true,
+                  controller: scrollController,
+                  child: TextField(
+                    onChanged: (value) {
+                      mess.value = value;
+                    },
+                    scrollController: scrollController,
+                    controller: message,
+                    keyboardType: TextInputType.multiline,
+                    minLines: 1,
+                    maxLines: 3,
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      filled: false,
+                      hintText: "Type your message...",
+                    ),
                   ),
                 ),
               ),
@@ -72,29 +87,46 @@ class BottomNavbar extends StatelessWidget {
               const SizedBox(width: 10),
               Padding(
                 padding: const EdgeInsets.only(bottom: 8.0),
-                child: InkWell(
-                  onTap: () {
-                    String msg = message.text.trim();
-                    if (msg.isNotEmpty) {
-                      chatController.sendMessage(
-                        userModel.id!,
-                        message.text,
-                        userModel,
-                      );
-                      message.clear();
-                    } else {
-                      message.clear();
-                    }
+                child: Obx(
+                  () {
+                    return mess.value == ''
+                        ? SizedBox(
+                            height: 30,
+                            width: 30,
+                            child: SvgPicture.asset(
+                              AssetsImage.micIcon,
+                              height: 30,
+                              width: 30,
+                            ),
+                          )
+                        : InkWell(
+                            onTap: () {
+                              String msg = message.text.trim();
+                              if (msg.isNotEmpty) {
+                                chatController.sendMessage(
+                                  userModel.id!,
+                                  message.text,
+                                  userModel,
+                                );
+                                message.clear();
+                                mess.value = '';
+                                msg = '';
+                              } else {
+                                message.clear();
+                                mess.value = '';
+                              }
+                            },
+                            child: SizedBox(
+                              height: 30,
+                              width: 30,
+                              child: SvgPicture.asset(
+                                AssetsImage.sendIcon,
+                                height: 30,
+                                width: 30,
+                              ),
+                            ),
+                          );
                   },
-                  child: SizedBox(
-                    height: 30,
-                    width: 30,
-                    child: SvgPicture.asset(
-                      AssetsImage.sendIcon,
-                      height: 30,
-                      width: 30,
-                    ),
-                  ),
                 ),
               ),
             ],
