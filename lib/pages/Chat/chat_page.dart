@@ -48,7 +48,7 @@ class ChatPage extends StatelessWidget {
                         message: snapshot.data![index].message!,
                         inComming: snapshot.data![index].senderId !=
                             profileController.currentUser.value.id,
-                        time: snapshot.data![index].timeStamp!,
+                        time: snapshot.data![index].currentTime!,
                         status: '',
                         imageUrl: snapshot.data![index].imageUrl ?? '');
                   },

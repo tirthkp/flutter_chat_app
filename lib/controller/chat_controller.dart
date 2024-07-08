@@ -75,7 +75,8 @@ class ChatController extends GetxController {
       senderId: auth.currentUser!.uid,
       receiverId: targetUserId,
       senderName: profileController.currentUser.value.name,
-      timeStamp: DateFormat('HH:mm a').format(DateTime.now()),
+      timeStamp: DateTime.now().toString(),
+      currentTime: DateFormat('HH:mm a').format(DateTime.now()),
     );
 
     var roomDetails = ChatRoomModel(
