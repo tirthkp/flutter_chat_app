@@ -70,39 +70,54 @@ class ChatPage extends StatelessWidget {
                       bottom: 0,
                       left: 0,
                       right: 0,
-                      child: Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primaryContainer,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                chatController.selectedImagePath.value = '';
-                              },
-                              icon: Icon(
-                                Icons.cancel_rounded,
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onPrimaryContainer,
-                                size: 30,
-                              ),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 12.0, right: 12, bottom: 12),
-                              child: SizedBox(
-                                width: double.infinity,
-                                child: Image.file(
-                                  File(chatController.selectedImagePath.value),
-                                  fit: BoxFit.fitWidth,
+                      child: IntrinsicHeight(
+                        child: Container(
+                          constraints: BoxConstraints(
+                              maxHeight:
+                                  MediaQuery.sizeOf(context).height / 1.5),
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: () {
+                                  chatController.selectedImagePath.value = '';
+                                },
+                                icon: Icon(
+                                  Icons.cancel_rounded,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onPrimaryContainer,
+                                  size: 30,
                                 ),
                               ),
-                            ),
-                          ],
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 8.0, right: 8, bottom: 8),
+                                child: Container(
+                                  constraints: BoxConstraints(
+                                      minWidth: double.infinity,
+                                      minHeight: 0,
+                                      maxHeight:
+                                          MediaQuery.of(context).size.height /
+                                              1.7),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(15),
+                                    child: Image.file(
+                                      File(chatController
+                                          .selectedImagePath.value),
+                                      fit: BoxFit.contain,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     )

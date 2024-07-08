@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
+import 'package:flutter_chat_app/pages/Chat/widgets/image_picker_button.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../../config/images.dart';
 import '../../../controller/chat_controller.dart';
@@ -81,8 +83,45 @@ class BottomNavbar extends StatelessWidget {
                   width: 30,
                   child: InkWell(
                     onTap: () async {
-                      chatController.selectedImagePath.value =
-                          await imageController.pickImage();
+                      Get.bottomSheet(
+                        Container(
+                          decoration: BoxDecoration(
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(10),
+                              topRight: Radius.circular(10),
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ImagePickerButton(
+                                onTap: () async {
+                                  chatController.selectedImagePath.value =
+                                      await imageController
+                                          .pickImage(ImageSource.camera);
+                                  Get.back();
+                                },
+                                icon: Icons.photo_camera_outlined,
+                              ),
+                              ImagePickerButton(
+                                onTap: () async {
+                                  chatController.selectedImagePath.value =
+                                      await imageController
+                                          .pickImage(ImageSource.gallery);
+                                  Get.back();
+                                },
+                                icon: Icons.photo_outlined,
+                              ),
+                              ImagePickerButton(
+                                onTap: () {},
+                                icon: Icons.play_arrow_outlined,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
                     },
                     child: SvgPicture.asset(
                       AssetsImage.galleryIcon,
@@ -99,15 +138,17 @@ class BottomNavbar extends StatelessWidget {
                   () {
                     return mess.value == '' &&
                             chatController.selectedImagePath.value == ''
-                        ? SizedBox(
-                            height: 30,
-                            width: 30,
-                            child: SvgPicture.asset(
-                              AssetsImage.micIcon,
-                              height: 30,
-                              width: 30,
-                            ),
-                          )
+                        ? chatController.isLoading.value
+                            ? const CircularProgressIndicator()
+                            : SizedBox(
+                                height: 30,
+                                width: 30,
+                                child: SvgPicture.asset(
+                                  AssetsImage.micIcon,
+                                  height: 30,
+                                  width: 30,
+                                ),
+                              )
                         : InkWell(
                             onTap: () async {
                               String msg = message.text.trim();

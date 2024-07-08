@@ -11,6 +11,7 @@ import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/widgets/primary_button.dart';
 import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
@@ -134,8 +135,8 @@ class ProfilePage extends StatelessWidget {
                           child: isEdit.value
                               ? InkWell(
                                   onTap: () async {
-                                    imagePath.value =
-                                        await imageController.pickImage();
+                                    imagePath.value = await imageController
+                                        .pickImage(ImageSource.gallery);
                                     localImagePath.value = imagePath.value;
                                   },
                                   child: Container(
