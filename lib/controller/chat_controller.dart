@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/model/chat_model.dart';
 import 'package:flutter_chat_app/model/chat_room_model.dart';
@@ -13,9 +14,12 @@ import '../config/images.dart';
 class ChatController extends GetxController {
   final auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
+  ProfileController profileController = Get.put(ProfileController());
+  ImageController imageController = Get.put(ImageController());
   RxBool isLoading = false.obs;
   var uuid = const Uuid();
-  ProfileController profileController = Get.put(ProfileController());
+  RxString selectedImagePath = ''.obs;
+  RxString imageUrl = ''.obs;
 
   String imgUrl(ChatRoomModel e) {
     if ((e.receiver!.id == profileController.currentUser.value.id
@@ -69,8 +73,15 @@ class ChatController extends GetxController {
         getSender(profileController.currentUser.value, targetUser);
     UserModel receiver =
         getReceiver(profileController.currentUser.value, targetUser);
+
+    if (selectedImagePath.value != '') {
+      String path = selectedImagePath.value;
+      selectedImagePath.value = '';
+      imageUrl.value = await imageController.uploadFileToFirebase(path);
+    }
     var newChat = ChatModel(
       message: message,
+      imageUrl: imageUrl.value,
       id: chatId,
       senderId: auth.currentUser!.uid,
       receiverId: targetUserId,
@@ -100,6 +111,9 @@ class ChatController extends GetxController {
           .set(
             newChat.toJson(),
           );
+      imageUrl.value = '';
+
+      print(imageUrl.value);
     } catch (e) {
       print(e);
     }

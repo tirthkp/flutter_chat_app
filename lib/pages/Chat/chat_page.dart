@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_chat_app/controller/chat_controller.dart';
@@ -19,47 +21,94 @@ class ChatPage extends StatelessWidget {
     ChatController chatController = Get.put(ChatController());
 
     ProfileController profileController = Get.put(ProfileController());
-    return GestureDetector(
-      onTap: FocusScope.of(context).unfocus,
-      child: Scaffold(
-        appBar: ChatAppBar(userModel: userModel),
-        bottomNavigationBar: BottomNavbar(userModel: userModel),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: StreamBuilder(
-            stream: chatController.getMessages(userModel.id!),
-            builder: (context, snapshot) {
-              // if (snapshot.connectionState == ConnectionState.waiting) {
-              //   return const Center(
-              //     child: CircularProgressIndicator(),
-              //   );
-              // }
-              if (snapshot.hasError) {
-                return Center(
-                  child: Text("Error:${snapshot.error}"),
-                );
-              }
-              if (snapshot.hasData && snapshot.data!.isNotEmpty) {
-                return ListView.builder(
-                  reverse: true,
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return ChatBubble(
-                        message: snapshot.data![index].message!,
-                        inComming: snapshot.data![index].senderId !=
-                            profileController.currentUser.value.id,
-                        time: snapshot.data![index].currentTime!,
-                        status: '',
-                        imageUrl: snapshot.data![index].imageUrl ?? '');
-                  },
-                );
-              } else {
-                return const Center(
-                  child: Text('Start chatting'),
-                );
-              }
-            },
-          ),
+    return Scaffold(
+      appBar: ChatAppBar(userModel: userModel),
+      bottomNavigationBar: BottomNavbar(userModel: userModel),
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Stack(
+          children: [
+            StreamBuilder(
+              stream: chatController.getMessages(userModel.id!),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text("Error:${snapshot.error}"),
+                  );
+                }
+                if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+                  return ListView.builder(
+                    keyboardDismissBehavior:
+                        ScrollViewKeyboardDismissBehavior.onDrag,
+                    reverse: true,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return ChatBubble(
+                          message: snapshot.data![index].message!,
+                          inComming: snapshot.data![index].senderId !=
+                              profileController.currentUser.value.id,
+                          time: snapshot.data![index].currentTime!,
+                          status: '',
+                          imageUrl: snapshot.data![index].imageUrl ?? '');
+                    },
+                  );
+                } else {
+                  return const Center(
+                    child: Text('Start chatting'),
+                  );
+                }
+              },
+            ),
+            Obx(
+              () => (chatController.selectedImagePath.value != '')
+                  ? Positioned(
+                      bottom: 0,
+                      left: 0,
+                      right: 0,
+                      child: Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).colorScheme.primaryContainer,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                chatController.selectedImagePath.value = '';
+                              },
+                              icon: Icon(
+                                Icons.cancel_rounded,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onPrimaryContainer,
+                                size: 30,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 12.0, right: 12, bottom: 12),
+                              child: SizedBox(
+                                width: double.infinity,
+                                child: Image.file(
+                                  File(chatController.selectedImagePath.value),
+                                  fit: BoxFit.fitWidth,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                  : Container(),
+            )
+          ],
         ),
       ),
     );

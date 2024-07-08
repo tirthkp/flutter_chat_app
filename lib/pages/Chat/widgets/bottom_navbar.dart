@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +16,7 @@ class BottomNavbar extends StatelessWidget {
     TextEditingController message = TextEditingController();
     ChatController chatController = Get.put(ChatController());
     ScrollController scrollController = ScrollController();
+    ImageController imageController = Get.put(ImageController());
     RxString mess = ''.obs;
 
     return Padding(
@@ -77,10 +79,16 @@ class BottomNavbar extends StatelessWidget {
                 child: SizedBox(
                   height: 30,
                   width: 30,
-                  child: SvgPicture.asset(
-                    AssetsImage.galleryIcon,
-                    height: 30,
-                    width: 30,
+                  child: InkWell(
+                    onTap: () async {
+                      chatController.selectedImagePath.value =
+                          await imageController.pickImage();
+                    },
+                    child: SvgPicture.asset(
+                      AssetsImage.galleryIcon,
+                      height: 30,
+                      width: 30,
+                    ),
                   ),
                 ),
               ),
@@ -89,7 +97,8 @@ class BottomNavbar extends StatelessWidget {
                 padding: const EdgeInsets.only(bottom: 8.0),
                 child: Obx(
                   () {
-                    return mess.value == ''
+                    return mess.value == '' &&
+                            chatController.selectedImagePath.value == ''
                         ? SizedBox(
                             height: 30,
                             width: 30,
@@ -100,14 +109,17 @@ class BottomNavbar extends StatelessWidget {
                             ),
                           )
                         : InkWell(
-                            onTap: () {
+                            onTap: () async {
                               String msg = message.text.trim();
-                              if (msg.isNotEmpty) {
+                              if (msg != '' ||
+                                  chatController.selectedImagePath.value !=
+                                      '') {
                                 chatController.sendMessage(
                                   userModel.id!,
                                   message.text,
                                   userModel,
                                 );
+
                                 message.clear();
                                 mess.value = '';
                                 msg = '';
@@ -116,15 +128,17 @@ class BottomNavbar extends StatelessWidget {
                                 mess.value = '';
                               }
                             },
-                            child: SizedBox(
-                              height: 30,
-                              width: 30,
-                              child: SvgPicture.asset(
-                                AssetsImage.sendIcon,
-                                height: 30,
-                                width: 30,
-                              ),
-                            ),
+                            child: chatController.isLoading.value
+                                ? const CircularProgressIndicator()
+                                : SizedBox(
+                                    height: 30,
+                                    width: 30,
+                                    child: SvgPicture.asset(
+                                      AssetsImage.sendIcon,
+                                      height: 30,
+                                      width: 30,
+                                    ),
+                                  ),
                           );
                   },
                 ),
