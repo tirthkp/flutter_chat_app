@@ -6,6 +6,7 @@ import 'package:flutter_chat_app/controller/auth_controller.dart';
 import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/home_controller.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
+import 'package:flutter_chat_app/pages/Groups/groups_page.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/chat_list.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/default_home_screen.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/tab_bar.dart';
@@ -45,21 +46,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               AssetsImage.appIcon,
             ),
           ),
-          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
           actions: [
             IconButton(
               onPressed: () {
-                homeController.getChatRoomList();
+                Get.changeThemeMode(
+                    Get.isDarkMode ? ThemeMode.light : ThemeMode.dark);
               },
-              icon: const Icon(
-                Icons.search,
+              icon: Icon(
+                Get.isDarkMode ? Icons.light_mode : Icons.dark_mode,
                 size: 30,
               ),
             ),
             IconButton(
               onPressed: () async {
                 Get.toNamed('/profilePage');
-                await profileController.getUserDetails();
               },
               icon: const Icon(
                 Icons.person,
@@ -91,20 +91,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
               contactController.isLoading.value
                   ? const Center(child: CircularProgressIndicator())
                   : RefreshIndicator(
-                      child: homeController.chatRoomList.isEmpty
-                          ? const DefaultHomeScreen()
-                          : const ChatList(),
+                      child: homeController.chatRoomList.isNotEmpty
+                          ? const ChatList()
+                          : const DefaultHomeScreen(),
                       onRefresh: () async {
                         await Future.delayed(const Duration(seconds: 2));
                         await homeController.getChatRoomList();
                       }),
-              ListView(
-                children: const [
-                  ListTile(
-                    title: Text('Groups'),
-                  ),
-                ],
-              ),
+              const GroupsPage(),
               ListView(
                 children: const [
                   ListTile(

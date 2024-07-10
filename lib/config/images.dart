@@ -18,4 +18,6 @@ class AssetsImage {
   //jpg images only
   static const userImg =
       "https://firebasestorage.googleapis.com/v0/b/chat-app-8525b.appspot.com/o/user.jpg?alt=media&token=a4237aeb-ddc8-4e4a-b933-5fd651236d73";
+  static const groupImg =
+      "https://firebasestorage.googleapis.com/v0/b/chat-app-8525b.appspot.com/o/group.jpg?alt=media&token=f9551c7a-2e92-416d-9cc4-3739bdbd6f13";
 }

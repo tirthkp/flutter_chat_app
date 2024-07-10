@@ -88,8 +88,14 @@ class ProfilePage extends StatelessWidget {
                                 ? localImagePath.value == ''
                                     ? ClipRRect(
                                         borderRadius: BorderRadius.circular(60),
-                                        child: Image.network(
-                                          AssetsImage.userImg,
+                                        child: CachedNetworkImage(
+                                          imageUrl: AssetsImage.userImg,
+                                          placeholder: (context, url) =>
+                                              const Center(
+                                                  child:
+                                                      CircularProgressIndicator()),
+                                          errorWidget: (context, url, error) =>
+                                              const Icon(Icons.error),
                                           fit: BoxFit.cover,
                                         ),
                                       )

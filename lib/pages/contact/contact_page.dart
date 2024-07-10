@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/home_controller.dart';
+import 'package:flutter_chat_app/pages/Groups/newGroup/new_group.dart';
 import 'package:flutter_chat_app/pages/contact/widgets/contact_list.dart';
 import 'package:flutter_chat_app/pages/contact/widgets/new_contact_tile.dart';
 import 'package:get/get.dart';
@@ -59,7 +60,10 @@ class ContactPage extends StatelessWidget {
             NewContactTile(
               icon: Icons.group_add,
               title: 'New Group',
-              onTap: () {},
+              onTap: () {
+                Get.to(() => const NewGroup(),
+                    transition: Transition.rightToLeft);
+              },
             ),
             const SizedBox(height: 15),
             Text(

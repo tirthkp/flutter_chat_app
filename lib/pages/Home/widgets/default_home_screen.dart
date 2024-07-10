@@ -8,6 +8,9 @@ class DefaultHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ContactController contactController = Get.put(ContactController());
+    Future.delayed(
+      const Duration(seconds: 2),
+    );
     return SizedBox(
       width: double.infinity,
       child: Column(

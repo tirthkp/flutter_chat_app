@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/model/chat_model.dart';
@@ -16,6 +17,7 @@ class ChatController extends GetxController {
   final db = FirebaseFirestore.instance;
   ProfileController profileController = Get.put(ProfileController());
   ImageController imageController = Get.put(ImageController());
+  ContactController contactController = Get.put(ContactController());
   RxBool isLoading = false.obs;
   var uuid = const Uuid();
   RxString selectedImagePath = ''.obs;
@@ -23,9 +25,13 @@ class ChatController extends GetxController {
 
   String imgUrl(ChatRoomModel e) {
     if ((e.receiver!.id == profileController.currentUser.value.id
-            ? e.sender!.profileImage
-            : e.receiver!.profileImage) ==
-        '') {
+                ? e.sender!.profileImage
+                : e.receiver!.profileImage) ==
+            '' ||
+        (e.receiver!.id == profileController.currentUser.value.id
+                ? e.sender!.profileImage
+                : e.receiver!.profileImage) ==
+            null) {
       return AssetsImage.userImg;
     } else if ((e.receiver!.id == profileController.currentUser.value.id)) {
       return e.sender!.profileImage!;
@@ -111,6 +117,7 @@ class ChatController extends GetxController {
           .set(
             newChat.toJson(),
           );
+      await contactController.saveContact(targetUser);
       imageUrl.value = '';
 
       print(imageUrl.value);

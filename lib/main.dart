@@ -32,7 +32,6 @@ class MyApp extends StatelessWidget {
       title: 'Chat App',
       theme: lightTheme,
       darkTheme: darkTheme,
-      themeMode: ThemeMode.dark,
       getPages: pagePath,
       home: const SplashPage(),
     );

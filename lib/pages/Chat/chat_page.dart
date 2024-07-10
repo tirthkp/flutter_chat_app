@@ -58,8 +58,11 @@ class ChatPage extends StatelessWidget {
                     },
                   );
                 } else {
-                  return const Center(
-                    child: Text('Start chatting'),
+                  return Center(
+                    child: Text(
+                      'Start chatting...',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   );
                 }
               },
