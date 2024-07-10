@@ -84,7 +84,7 @@ class ContactList extends StatelessWidget {
                   ),
                   subtitle: Text(
                     e.about != null && e.about != '' ? e.about! : "Hey there",
-                    style: Theme.of(context).textTheme.labelMedium,
+                    style: Theme.of(context).textTheme.labelLarge,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

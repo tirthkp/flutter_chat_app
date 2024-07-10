@@ -24,7 +24,7 @@ class BottomNavbar extends StatelessWidget {
     return Padding(
       padding: MediaQuery.of(context).viewInsets,
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 8.0),
+        padding: const EdgeInsets.only(bottom: 12.0, left: 8, right: 8),
         child: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(

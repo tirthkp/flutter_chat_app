@@ -18,8 +18,8 @@ class CallButton extends StatelessWidget {
     return InkWell(
       onTap: ontap,
       child: Container(
-        height: 70,
-        width: 70,
+        height: 80,
+        width: 80,
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.surface,
           borderRadius: BorderRadius.circular(15),
@@ -37,7 +37,7 @@ class CallButton extends StatelessWidget {
               const SizedBox(height: 5),
               Text(
                 name,
-                style: Theme.of(context).textTheme.bodySmall,
+                style: Theme.of(context).textTheme.labelLarge,
               ),
             ],
           ),

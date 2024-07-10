@@ -10,4 +10,4 @@ const lBackgroundColor = Color(0xFFCCC1F0);
 const lPrimaryColor = Color(0xff0057ff);
 const lContainerColor = Color(0xFFFFFFFF);
 const lOnBackgroundColor = Color(0xFF191B28);
-const lOnContainerColor = Color.fromARGB(255, 58, 58, 58);
+const lOnContainerColor = Color(0xFF3A3A3A);

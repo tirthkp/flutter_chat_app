@@ -38,7 +38,8 @@ class NewGroup extends StatelessWidget {
             if (groupController.groupMembers.isEmpty) {
               Get.snackbar('Error',
                   'Please select at least one contact to create a group.',
-                  backgroundColor: Theme.of(context).colorScheme.surface);
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  colorText: Theme.of(context).colorScheme.onSurface);
             } else {
               Get.to(() => const GroupDetails(),
                   transition: Transition.rightToLeft);
@@ -46,7 +47,9 @@ class NewGroup extends StatelessWidget {
           },
           child: Icon(
             Icons.arrow_forward_ios,
-            color: Theme.of(context).colorScheme.onSurface,
+            color: groupController.groupMembers.isEmpty
+                ? Theme.of(context).colorScheme.onSurface
+                : Colors.white,
           ),
         ),
       ),
@@ -116,7 +119,7 @@ class NewGroup extends StatelessWidget {
                                 snapshot.data![index].about == null
                             ? "Hey there, I'm a developer"
                             : snapshot.data![index].about!,
-                        style: Theme.of(context).textTheme.labelMedium,
+                        style: Theme.of(context).textTheme.labelLarge,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),

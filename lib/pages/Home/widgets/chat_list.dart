@@ -27,7 +27,7 @@ class ChatList extends StatelessWidget {
         children: homeController.chatRoomList.map(
           (e) {
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
               child: ListTile(
                 onTap: () {
                   Get.to(
@@ -99,7 +99,7 @@ class ChatList extends StatelessWidget {
                   e.lastMessage != null && e.lastMessage != ''
                       ? e.lastMessage!
                       : "Hey there",
-                  style: Theme.of(context).textTheme.labelMedium,
+                  style: Theme.of(context).textTheme.labelLarge,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -113,7 +113,7 @@ class ChatList extends StatelessWidget {
                       : Theme.of(context).textTheme.labelMedium,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
+                  borderRadius: BorderRadius.circular(10),
                 ),
               ),
             );

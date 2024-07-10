@@ -4,7 +4,7 @@ import 'package:flutter_chat_app/config/colors.dart';
 var lightTheme = ThemeData.light(
   useMaterial3: true,
 ).copyWith(
-  iconTheme: const IconThemeData(color: lOnBackgroundColor),
+  iconTheme: const IconThemeData(color: lBackgroundColor),
   scaffoldBackgroundColor: lBackgroundColor,
   brightness: Brightness.light,
   appBarTheme: const AppBarTheme(
@@ -23,14 +23,20 @@ var lightTheme = ThemeData.light(
       borderRadius: BorderRadius.all(Radius.circular(10)),
       borderSide: BorderSide(width: 0),
     ),
+    hintStyle: TextStyle(
+      fontSize: 12,
+      color: lOnContainerColor,
+      fontFamily: 'Poppins',
+      fontWeight: FontWeight.w400,
+    ),
   ),
   colorScheme: const ColorScheme.dark(
     primary: lPrimaryColor,
     onPrimary: lBackgroundColor,
     surface: lBackgroundColor,
-    onSurface: lBackgroundColor,
+    onSurface: lOnBackgroundColor,
     primaryContainer: lContainerColor,
-    onPrimaryContainer: lOnContainerColor,
+    onPrimaryContainer: lBackgroundColor,
   ),
   textTheme: const TextTheme(
     headlineLarge: TextStyle(
@@ -91,6 +97,12 @@ var darkTheme = ThemeData(useMaterial3: true).copyWith(
     backgroundColor: dContainerColor,
   ),
   inputDecorationTheme: const InputDecorationTheme(
+    hintStyle: TextStyle(
+      fontSize: 12,
+      color: dOnContainerColor,
+      fontFamily: 'Poppins',
+      fontWeight: FontWeight.w400,
+    ),
     fillColor: dBackgroundColor,
     filled: true,
     border: OutlineInputBorder(

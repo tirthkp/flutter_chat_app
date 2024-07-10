@@ -35,7 +35,7 @@ class GroupDetails extends StatelessWidget {
         () => FloatingActionButton(
           elevation: 0,
           backgroundColor: text.value == ''
-              ? Theme.of(context).colorScheme.surface
+              ? Theme.of(context).colorScheme.primaryContainer
               : Theme.of(context).colorScheme.primary,
           onPressed: () {
             text.value = groupName.text.trim();
@@ -51,7 +51,9 @@ class GroupDetails extends StatelessWidget {
               ? const CircularProgressIndicator()
               : Icon(
                   Icons.done,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: text.value == ''
+                      ? Theme.of(context).colorScheme.onSurface
+                      : Colors.white,
                 ),
         ),
       ),
@@ -177,7 +179,7 @@ class GroupDetails extends StatelessWidget {
                             e.about == '' || e.about == null
                                 ? "hey there"
                                 : e.about!,
-                            style: Theme.of(context).textTheme.bodySmall,
+                            style: Theme.of(context).textTheme.labelLarge,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

@@ -78,36 +78,33 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                   await contactController.getUserList();
                 },
                 backgroundColor: Theme.of(context).colorScheme.primary,
-                child: Icon(
+                child: const Icon(
                   Icons.add,
-                  color: Theme.of(context).colorScheme.onSurface,
+                  color: Colors.white,
                 ),
               ),
-        body: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: TabBarView(
-            controller: tabController,
-            children: [
-              contactController.isLoading.value
-                  ? const Center(child: CircularProgressIndicator())
-                  : RefreshIndicator(
-                      child: homeController.chatRoomList.isNotEmpty
-                          ? const ChatList()
-                          : const DefaultHomeScreen(),
-                      onRefresh: () async {
-                        await Future.delayed(const Duration(seconds: 2));
-                        await homeController.getChatRoomList();
-                      }),
-              const GroupsPage(),
-              ListView(
-                children: const [
-                  ListTile(
-                    title: Text('Calls'),
-                  ),
-                ],
-              ),
-            ],
-          ),
+        body: TabBarView(
+          controller: tabController,
+          children: [
+            contactController.isLoading.value
+                ? const Center(child: CircularProgressIndicator())
+                : RefreshIndicator(
+                    child: homeController.chatRoomList.isNotEmpty
+                        ? const ChatList()
+                        : const DefaultHomeScreen(),
+                    onRefresh: () async {
+                      await Future.delayed(const Duration(seconds: 2));
+                      await homeController.getChatRoomList();
+                    }),
+            const GroupsPage(),
+            ListView(
+              children: const [
+                ListTile(
+                  title: Text('Calls'),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

@@ -28,7 +28,10 @@ class NewContactTile extends StatelessWidget {
           ),
           width: 50,
           height: 50,
-          child: Icon(icon),
+          child: Icon(
+            icon,
+            color: Colors.white,
+          ),
         ),
         title: Text(title),
       ),
