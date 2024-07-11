@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/config/strings.dart';
+import 'package:flutter_chat_app/config/theme/theme_service.dart';
 import 'package:flutter_chat_app/controller/auth_controller.dart';
 import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/home_controller.dart';
@@ -49,11 +50,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           actions: [
             IconButton(
               onPressed: () {
-                Get.changeThemeMode(
-                    Get.isDarkMode ? ThemeMode.light : ThemeMode.dark);
+                ThemeService().changeThemeMode();
               },
               icon: Icon(
-                Get.isDarkMode ? Icons.light_mode : Icons.dark_mode,
+                Get.isDarkMode
+                    ? Icons.light_mode_outlined
+                    : Icons.dark_mode_outlined,
                 size: 30,
               ),
             ),
@@ -62,7 +64,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 Get.toNamed('/profilePage');
               },
               icon: const Icon(
-                Icons.person,
+                Icons.person_2_outlined,
                 size: 30,
               ),
             ),

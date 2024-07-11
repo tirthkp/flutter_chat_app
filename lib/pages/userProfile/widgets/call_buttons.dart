@@ -5,12 +5,14 @@ class CallButton extends StatelessWidget {
   final String name;
   final double size;
   final VoidCallback ontap;
+  final Color color;
   const CallButton({
     super.key,
     required this.icon,
     required this.name,
     required this.size,
     required this.ontap,
+    required this.color,
   });
 
   @override
@@ -18,15 +20,15 @@ class CallButton extends StatelessWidget {
     return InkWell(
       onTap: ontap,
       child: Container(
-        height: 80,
-        width: 80,
+        height: 50,
+        width: 100,
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          borderRadius: BorderRadius.circular(15),
+          color: color,
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(
@@ -34,10 +36,10 @@ class CallButton extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onSurface,
                 size: size,
               ),
-              const SizedBox(height: 5),
+              const SizedBox(width: 5),
               Text(
                 name,
-                style: Theme.of(context).textTheme.labelLarge,
+                style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
           ),

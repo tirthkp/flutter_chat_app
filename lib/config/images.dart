@@ -17,7 +17,7 @@ class AssetsImage {
 
   //jpg images only
   static const userImg =
-      "https://firebasestorage.googleapis.com/v0/b/chat-app-8525b.appspot.com/o/user.jpg?alt=media&token=a4237aeb-ddc8-4e4a-b933-5fd651236d73";
+      "https://firebasestorage.googleapis.com/v0/b/chat-app-8525b.appspot.com/o/9187604.png?alt=media&token=0310f15b-c909-4e42-8935-5cf0ac49649f";
   static const groupImg =
-      "https://firebasestorage.googleapis.com/v0/b/chat-app-8525b.appspot.com/o/group.jpg?alt=media&token=f9551c7a-2e92-416d-9cc4-3739bdbd6f13";
+      "https://firebasestorage.googleapis.com/v0/b/chat-app-8525b.appspot.com/o/group.png?alt=media&token=a52b1605-f483-47e6-a10a-8012e9d75398";
 }

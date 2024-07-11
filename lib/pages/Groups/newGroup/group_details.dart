@@ -77,7 +77,8 @@ class GroupDetails extends StatelessWidget {
                           width: 150,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Theme.of(context).colorScheme.surface,
+                            color:
+                                Theme.of(context).colorScheme.primaryContainer,
                             image: DecorationImage(
                               image: imagePath.value == ''
                                   ? const CachedNetworkImageProvider(
@@ -88,27 +89,25 @@ class GroupDetails extends StatelessWidget {
                               fit: BoxFit.cover,
                             ),
                           ),
-                          child: Stack(
-                            children: [
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                      shape: BoxShape.circle),
-                                  child: IconButton(
-                                    onPressed: () async {
-                                      imagePath.value =
-                                          await imageController.pickImage(
-                                        ImageSource.gallery,
-                                      );
-                                    },
-                                    icon: const Icon(Icons.add_a_photo),
-                                  ),
+                          child: Align(
+                            alignment: Alignment.bottomRight,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  shape: BoxShape.circle),
+                              child: IconButton(
+                                onPressed: () async {
+                                  imagePath.value =
+                                      await imageController.pickImage(
+                                    ImageSource.gallery,
+                                  );
+                                },
+                                icon: const Icon(
+                                  Icons.add_a_photo,
+                                  color: Colors.white,
                                 ),
                               ),
-                            ],
+                            ),
                           ),
                         ),
                       ),

@@ -3,10 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_chat_app/config/page_path.dart';
-import 'package:flutter_chat_app/config/themes.dart';
+import 'package:flutter_chat_app/config/theme/theme_service.dart';
+import 'package:flutter_chat_app/config/theme/themes.dart';
 import 'package:flutter_chat_app/firebase_options.dart';
 import 'package:flutter_chat_app/pages/splashPage/splash_page.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,6 +21,7 @@ void main() async {
   );
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+  await GetStorage.init();
   runApp(const MyApp());
 }
 
@@ -32,6 +35,7 @@ class MyApp extends StatelessWidget {
       title: 'Chat App',
       theme: lightTheme,
       darkTheme: darkTheme,
+      themeMode: ThemeService().getThemeMode(),
       getPages: pagePath,
       home: const SplashPage(),
     );

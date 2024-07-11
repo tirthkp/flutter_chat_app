@@ -31,6 +31,7 @@ class NewContactTile extends StatelessWidget {
           child: Icon(
             icon,
             color: Colors.white,
+            size: 30,
           ),
         ),
         title: Text(title),

@@ -86,22 +86,25 @@ class UserInfo extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 CallButton(
-                  icon: Icons.phone,
+                  icon: Icons.phone_outlined,
                   name: 'Call',
                   size: 30,
                   ontap: () {},
+                  color: Colors.green.withOpacity(0.5),
                 ),
                 CallButton(
-                  icon: Icons.videocam,
+                  icon: Icons.videocam_outlined,
                   name: 'Video',
                   size: 30,
                   ontap: () {},
+                  color: Colors.blue.withOpacity(0.5),
                 ),
                 CallButton(
-                  icon: Icons.chat_bubble,
+                  icon: Icons.chat_bubble_outline,
                   name: 'Chat',
                   size: 25,
                   ontap: () {},
+                  color: Colors.red.withOpacity(0.5),
                 ),
               ],
             ),
