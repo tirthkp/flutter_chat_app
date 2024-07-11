@@ -43,8 +43,14 @@ class GroupModel {
     if (json["profileImage"] is String) {
       profileImage = json["profileImage"];
     }
-    if (json["members"] is Map) {
-      json["members"] == null ? null : UserModel.fromJson(json["members"]);
+    if (json["members"] != null) {
+      members = List<UserModel>.from(
+        json["members"].map(
+          (e) => UserModel.fromJson(e),
+        ),
+      );
+    } else {
+      members = [];
     }
     if (json["created_at"] is String) {
       createdAt = json["created_at"];
@@ -79,7 +85,7 @@ class GroupModel {
     data["description"] = description;
     data["profileImage"] = profileImage;
     if (members != null) {
-      data["members"] = members;
+      data["members"] = members!.toList();
     }
     data["created_at"] = createdAt;
     data["created_by"] = createdBy;

@@ -41,14 +41,24 @@ class GroupDetails extends StatelessWidget {
             text.value = groupName.text.trim();
             if (text.value != '') {
               groupController.createGroup(groupName.text, imagePath.value);
+              Get.snackbar(
+                'Group Created',
+                'Group Created Successfully',
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                colorText: Theme.of(context).colorScheme.onSurface,
+              );
+              Get.offAllNamed('/homePage');
             } else {
               Get.snackbar("Error", "Please enter group name",
-                  backgroundColor: Theme.of(context).colorScheme.surface);
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  colorText: Theme.of(context).colorScheme.onSurface);
               groupName.clear();
             }
           },
           child: groupController.isLoading.value
-              ? const CircularProgressIndicator()
+              ? const CircularProgressIndicator(
+                  color: Colors.white,
+                )
               : Icon(
                   Icons.done,
                   color: text.value == ''

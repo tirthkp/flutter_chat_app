@@ -5,6 +5,7 @@ import 'package:flutter_chat_app/config/strings.dart';
 import 'package:flutter_chat_app/config/theme/theme_service.dart';
 import 'package:flutter_chat_app/controller/auth_controller.dart';
 import 'package:flutter_chat_app/controller/contact_controller.dart';
+import 'package:flutter_chat_app/controller/group_controller.dart';
 import 'package:flutter_chat_app/controller/home_controller.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/pages/Groups/groups_page.dart';
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   AuthController authController = Get.put(AuthController());
   ContactController contactController = Get.put(ContactController());
   HomeController homeController = Get.put(HomeController());
+  GroupController groupController = Get.put(GroupController());
   @override
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 3, vsync: this);
@@ -89,7 +91,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           controller: tabController,
           children: [
             contactController.isLoading.value
-                ? const Center(child: CircularProgressIndicator())
+                ? const Center(child: CircularProgressIndicator.adaptive())
                 : RefreshIndicator(
                     child: homeController.chatRoomList.isNotEmpty
                         ? const ChatList()
@@ -98,7 +100,16 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       await Future.delayed(const Duration(seconds: 2));
                       await homeController.getChatRoomList();
                     }),
-            const GroupsPage(),
+            groupController.isLoading.value
+                ? const Center(child: CircularProgressIndicator.adaptive())
+                : RefreshIndicator(
+                    child: homeController.chatRoomList.isNotEmpty
+                        ? const GroupsPage()
+                        : const DefaultHomeScreen(),
+                    onRefresh: () async {
+                      await Future.delayed(const Duration(seconds: 2));
+                      await groupController.getGroups();
+                    }),
             ListView(
               children: const [
                 ListTile(
