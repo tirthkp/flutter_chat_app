@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/controller/group_controller.dart';
+import 'package:flutter_chat_app/pages/groupChat/group_chat.dart';
 import 'package:get/get.dart';
 
 class GroupsPage extends StatelessWidget {
@@ -17,7 +18,11 @@ class GroupsPage extends StatelessWidget {
               (e) => Padding(
                 padding: const EdgeInsets.only(top: 8.0, right: 8, left: 8),
                 child: ListTile(
-                  onTap: () {},
+                  onTap: () {
+                    Get.to(GroupChat(
+                      groupModel: e,
+                    ));
+                  },
                   horizontalTitleGap: 15,
                   leading: CachedNetworkImage(
                     imageUrl: e.profileImage == '' || e.profileImage == null

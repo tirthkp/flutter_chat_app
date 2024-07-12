@@ -119,8 +119,6 @@ class ChatController extends GetxController {
           );
       await contactController.saveContact(targetUser);
       imageUrl.value = '';
-
-      print(imageUrl.value);
     } catch (e) {
       print(e);
     }
