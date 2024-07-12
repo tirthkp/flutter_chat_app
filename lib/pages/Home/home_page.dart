@@ -16,6 +16,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../controller/profile_controller.dart';
+import '../Groups/newGroup/new_group.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -95,7 +96,14 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                 : RefreshIndicator(
                     child: homeController.chatRoomList.isNotEmpty
                         ? const ChatList()
-                        : const DefaultHomeScreen(),
+                        : DefaultHomeScreen(
+                            text: 'Start Chatting...',
+                            buttonText: 'Contacts',
+                            onTap: () async {
+                              Get.toNamed('/contactPage');
+                              await contactController.getUserList();
+                            },
+                          ),
                     onRefresh: () async {
                       await Future.delayed(const Duration(seconds: 2));
                       await homeController.getChatRoomList();
@@ -103,9 +111,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             groupController.isLoading.value
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : RefreshIndicator(
-                    child: homeController.chatRoomList.isNotEmpty
+                    child: groupController.groupList.isNotEmpty
                         ? const GroupsPage()
-                        : const DefaultHomeScreen(),
+                        : DefaultHomeScreen(
+                            text: 'No groups here...',
+                            buttonText: 'Create Group',
+                            onTap: () {
+                              Get.to(() => const NewGroup(),
+                                  transition: Transition.rightToLeft);
+                            }),
                     onRefresh: () async {
                       await Future.delayed(const Duration(seconds: 2));
                       await groupController.getGroups();

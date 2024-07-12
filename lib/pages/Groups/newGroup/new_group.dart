@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/group_controller.dart';
+import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/pages/Groups/newGroup/group_details.dart';
 import 'package:get/get.dart';
 
@@ -13,6 +14,7 @@ class NewGroup extends StatelessWidget {
   Widget build(BuildContext context) {
     ContactController contactController = Get.put(ContactController());
     GroupController groupController = Get.put(GroupController());
+    ProfileController profileController = Get.put(ProfileController());
     return Scaffold(
       appBar: AppBar(
         title: const Text('New Group'),
@@ -72,74 +74,81 @@ class NewGroup extends StatelessWidget {
               keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Obx(
-                    () => ListTile(
-                      selected: groupController.groupMembers
-                          .contains(snapshot.data![index]),
-                      selectedColor: Colors.white,
-                      selectedTileColor: Theme.of(context).colorScheme.primary,
-                      onTap: () {
-                        groupController.selectMember(snapshot.data![index]);
-                      },
-                      horizontalTitleGap: 15,
-                      leading: CachedNetworkImage(
-                        imageUrl: snapshot.data![index].profileImage == '' ||
-                                snapshot.data![index].profileImage == null
-                            ? AssetsImage.userImg
-                            : snapshot.data![index].profileImage!,
-                        imageBuilder: (context, imageProvider) {
-                          return Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              ),
+                return snapshot.data![index].email ==
+                        profileController.currentUser.value.email
+                    ? const SizedBox.shrink()
+                    : Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Obx(
+                          () => ListTile(
+                            selected: groupController.groupMembers
+                                .contains(snapshot.data![index]),
+                            selectedColor: Colors.white,
+                            selectedTileColor:
+                                Theme.of(context).colorScheme.primary,
+                            onTap: () {
+                              groupController
+                                  .selectMember(snapshot.data![index]);
+                            },
+                            horizontalTitleGap: 15,
+                            leading: CachedNetworkImage(
+                              imageUrl: snapshot.data![index].profileImage ==
+                                          '' ||
+                                      snapshot.data![index].profileImage == null
+                                  ? AssetsImage.userImg
+                                  : snapshot.data![index].profileImage!,
+                              imageBuilder: (context, imageProvider) {
+                                return Container(
+                                  height: 60,
+                                  width: 60,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    image: DecorationImage(
+                                      image: imageProvider,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                );
+                              },
+                              placeholder: (context, url) =>
+                                  const CircularProgressIndicator(),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                              fit: BoxFit.cover,
                             ),
-                          );
-                        },
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.cover,
-                      ),
-                      title: Text(
-                        snapshot.data![index].name!,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                        overflow: TextOverflow.clip,
-                        maxLines: 1,
-                      ),
-                      subtitle: Text(
-                        snapshot.data![index].about == '' ||
-                                snapshot.data![index].about == null
-                            ? "Hey there, I'm a developer"
-                            : snapshot.data![index].about!,
-                        style: Theme.of(context).textTheme.labelLarge,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      tileColor: Theme.of(context).colorScheme.primaryContainer,
-                      trailing: groupController.groupMembers
-                              .contains(snapshot.data![index])
-                          ? const Icon(Icons.done)
-                          : null,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                );
+                            title: Text(
+                              snapshot.data![index].name!,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                              overflow: TextOverflow.clip,
+                              maxLines: 1,
+                            ),
+                            subtitle: Text(
+                              snapshot.data![index].about == '' ||
+                                      snapshot.data![index].about == null
+                                  ? "Hey there, I'm a developer"
+                                  : snapshot.data![index].about!,
+                              style: Theme.of(context).textTheme.labelLarge,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            tileColor:
+                                Theme.of(context).colorScheme.primaryContainer,
+                            trailing: groupController.groupMembers
+                                    .contains(snapshot.data![index])
+                                ? const Icon(Icons.done)
+                                : null,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                        ),
+                      );
               },
             );
           } else {
             return Center(
               child: Text(
-                'Start chatting...',
+                'No Users found',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
             );

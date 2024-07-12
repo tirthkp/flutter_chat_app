@@ -4,6 +4,7 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/model/user_model.dart';
 import 'package:get/get.dart';
 
@@ -23,11 +24,13 @@ class AuthController extends GetxController {
       );
       Get.offAllNamed('/homePage');
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('user not found');
-      } else if (e.code == 'wrong-password') {
-        print('wrong pass');
-      }
+      Get.snackbar(
+        'Error',
+        e.code.replaceAll(RegExp(r'-'), ' '),
+        backgroundColor: const Color(0xff0057ff),
+        isDismissible: true,
+        colorText: Colors.white,
+      );
     } catch (e) {
       print(e);
     }
@@ -45,13 +48,18 @@ class AuthController extends GetxController {
       await initUser(email, name);
       Get.offAllNamed('/homePage');
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('weak pass');
-      } else if (e.code == 'email-already-in-use') {
-        print('email already exists');
-      }
+      Get.snackbar(
+        'Error',
+        e.code.replaceAll(RegExp(r'-'), ' '),
+        backgroundColor: const Color(0xff0057ff),
+        isDismissible: true,
+        colorText: Colors.white,
+      );
     } catch (e) {
-      print(e);
+      Get.snackbar(
+        'Error',
+        e.toString(),
+      );
     }
     isLoading.value = false;
     isVisible.value = false;

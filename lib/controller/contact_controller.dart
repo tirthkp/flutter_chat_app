@@ -57,8 +57,8 @@ class ContactController extends GetxController {
   Stream<List<UserModel>> getContacts() {
     return db
         .collection("users")
-        .doc(auth.currentUser!.uid)
-        .collection("contacts")
+        // .doc(auth.currentUser!.uid)
+        // .collection("contacts")
         .snapshots()
         .map(
           (snapshot) => snapshot.docs

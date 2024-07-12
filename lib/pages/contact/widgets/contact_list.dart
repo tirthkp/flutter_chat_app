@@ -26,79 +26,84 @@ class ContactList extends StatelessWidget {
             .map(
               (e) => Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: ListTile(
-                  onTap: () {
-                    Get.to(() => ChatPage(userModel: e),
-                        transition: Transition.rightToLeft);
-                    chatController.getRoomId(e.id!);
-                  },
-                  horizontalTitleGap: 15,
-                  leading: e.profileImage != null && e.profileImage != ''
-                      ? CachedNetworkImage(
-                          imageUrl: e.profileImage!,
-                          imageBuilder: (context, imageProvider) {
-                            return Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
+                child: e.id == profileController.currentUser.value.id
+                    ? const SizedBox.shrink()
+                    : ListTile(
+                        onTap: () {
+                          Get.to(() => ChatPage(userModel: e),
+                              transition: Transition.rightToLeft);
+                          chatController.getRoomId(e.id!);
+                        },
+                        horizontalTitleGap: 15,
+                        leading: e.profileImage != null && e.profileImage != ''
+                            ? CachedNetworkImage(
+                                imageUrl: e.profileImage!,
+                                imageBuilder: (context, imageProvider) {
+                                  return Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                fit: BoxFit.cover,
+                              )
+                            : CachedNetworkImage(
+                                imageUrl: AssetsImage.userImg,
+                                imageBuilder: (context, imageProvider) {
+                                  return Container(
+                                    height: 60,
+                                    width: 60,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      image: DecorationImage(
+                                        image: imageProvider,
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  );
+                                },
+                                placeholder: (context, url) =>
+                                    const CircularProgressIndicator(),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                                fit: BoxFit.cover,
                               ),
-                            );
-                          },
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                          fit: BoxFit.cover,
-                        )
-                      : CachedNetworkImage(
-                          imageUrl: AssetsImage.userImg,
-                          imageBuilder: (context, imageProvider) {
-                            return Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
-                          placeholder: (context, url) =>
-                              const CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
-                          fit: BoxFit.cover,
+                        title: Text(
+                          e.name ?? 'User Name',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                          overflow: TextOverflow.clip,
+                          maxLines: 1,
                         ),
-                  title: Text(
-                    e.name ?? 'User Name',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    overflow: TextOverflow.clip,
-                    maxLines: 1,
-                  ),
-                  subtitle: Text(
-                    e.about != null && e.about != '' ? e.about! : "Hey there",
-                    style: Theme.of(context).textTheme.labelLarge,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  tileColor: Theme.of(context).colorScheme.primaryContainer,
-                  trailing: Text(
-                    e.email == profileController.currentUser.value.email
-                        ? 'You'
-                        : '',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
+                        subtitle: Text(
+                          e.about != null && e.about != ''
+                              ? e.about!
+                              : "Hey there",
+                          style: Theme.of(context).textTheme.labelLarge,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        tileColor:
+                            Theme.of(context).colorScheme.primaryContainer,
+                        trailing: Text(
+                          e.email == profileController.currentUser.value.email
+                              ? 'You'
+                              : '',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
               ),
             )
             .toList(),

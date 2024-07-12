@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/model/group_chat_model.dart';
 import 'package:flutter_chat_app/model/user_model.dart';
@@ -17,9 +16,9 @@ class GroupController extends GetxController {
   RxList<GroupModel> groupList = <GroupModel>[].obs;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    getGroups();
+    await getGroups();
   }
 
   void selectMember(UserModel user) {
@@ -68,12 +67,12 @@ class GroupController extends GetxController {
         },
       );
       groupList.clear();
-      groupList.value = tempGroup
-          .where(
-            (e) => e.members!
-                .any((element) => element.id == auth.currentUser!.uid),
-          )
-          .toList();
+      groupList.value = tempGroup.where((group) {
+        final isCreator = group.createdBy == auth.currentUser!.uid;
+        final isMember =
+            group.members!.any((member) => member.id == auth.currentUser!.uid);
+        return isCreator || isMember;
+      }).toList();
     } catch (e) {
       print(e);
     }

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_chat_app/controller/contact_controller.dart';
-import 'package:get/get.dart';
 
 class DefaultHomeScreen extends StatelessWidget {
-  const DefaultHomeScreen({super.key});
+  final String text;
+  final VoidCallback onTap;
+  final String buttonText;
+  const DefaultHomeScreen(
+      {super.key,
+      required this.text,
+      required this.onTap,
+      required this.buttonText});
 
   @override
   Widget build(BuildContext context) {
-    ContactController contactController = Get.put(ContactController());
     Future.delayed(
       const Duration(seconds: 2),
     );
@@ -17,16 +21,20 @@ class DefaultHomeScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Start Chatting',
+            text,
             style: Theme.of(context).textTheme.bodyLarge,
           ),
           const SizedBox(height: 10),
           ElevatedButton(
-              onPressed: () async {
-                Get.toNamed('/contactPage');
-                await contactController.getUserList();
-              },
-              child: const Text('Contacts'))
+            style: ElevatedButton.styleFrom(
+                backgroundColor:
+                    Theme.of(context).colorScheme.primaryContainer),
+            onPressed: onTap,
+            child: Text(
+              buttonText,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          )
         ],
       ),
     );
