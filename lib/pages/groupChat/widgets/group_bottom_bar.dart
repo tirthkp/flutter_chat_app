@@ -84,6 +84,7 @@ class GroupBottomBar extends StatelessWidget {
                   child: InkWell(
                     onTap: () async {
                       Get.bottomSheet(
+                        elevation: 0,
                         Container(
                           decoration: BoxDecoration(
                             color:
@@ -155,7 +156,7 @@ class GroupBottomBar extends StatelessWidget {
                               if (msg != '' ||
                                   groupController.selectedImagePath.value !=
                                       '') {
-                                groupController.sendGroupMessage(
+                                await groupController.sendGroupMessage(
                                   message.text,
                                   groupModel.id!,
                                   groupController.selectedImagePath.value,

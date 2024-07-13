@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/model/group_chat_model.dart';
+import 'package:flutter_chat_app/pages/groupChat/widgets/group_info.dart';
 
 import 'package:get/get.dart';
 
@@ -33,8 +34,11 @@ class GroupChatAppBar extends StatelessWidget implements PreferredSizeWidget {
         enableFeedback: false,
         splashColor: Colors.transparent,
         onTap: () {
-          // Get.to(() => UserProfile(groupModel: groupModel),
-          // transition: Transition.rightToLeft);
+          Get.to(
+              GroupInfo(
+                groupModel: groupModel,
+              ),
+              transition: Transition.rightToLeft);
         },
         leading: groupModel.profileImage != null &&
                 groupModel.profileImage != ''

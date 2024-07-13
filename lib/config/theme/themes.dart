@@ -32,7 +32,7 @@ var lightTheme = ThemeData.light(
   ),
   colorScheme: const ColorScheme.dark(
     primary: lPrimaryColor,
-    onPrimary: lBackgroundColor,
+    onPrimary: lContainerColor,
     surface: lBackgroundColor,
     onSurface: lOnBackgroundColor,
     primaryContainer: lContainerColor,

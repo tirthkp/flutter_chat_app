@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/pages/userProfile/widgets/user_info.dart';
 import 'package:get/get.dart';
 
+import '../../config/images.dart';
 import '../../model/user_model.dart';
 
 class UserProfile extends StatelessWidget {
@@ -36,11 +37,11 @@ class UserProfile extends StatelessWidget {
             UserInfo(
               email: userModel.email!,
               name: userModel.name!,
-              profileImage: userModel.profileImage ?? '',
-              userModel: userModel,
-            ),
-            const Spacer(),
-            // LogoutButton(),
+              profileImage:
+                  userModel.profileImage != null && userModel.profileImage != ''
+                      ? userModel.profileImage!
+                      : AssetsImage.userImg,
+            )
           ],
         ),
       ),

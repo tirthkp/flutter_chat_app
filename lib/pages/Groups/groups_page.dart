@@ -19,9 +19,9 @@ class GroupsPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 8.0, right: 8, left: 8),
                 child: ListTile(
                   onTap: () {
-                    Get.to(GroupChat(
-                      groupModel: e,
-                    ));
+                    Get.to(() => GroupChat(
+                          groupModel: e,
+                        ));
                   },
                   horizontalTitleGap: 15,
                   leading: CachedNetworkImage(

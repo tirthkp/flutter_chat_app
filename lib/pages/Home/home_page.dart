@@ -94,6 +94,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             contactController.isLoading.value
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : RefreshIndicator(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     child: homeController.chatRoomList.isNotEmpty
                         ? const ChatList()
                         : DefaultHomeScreen(
@@ -111,6 +113,8 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             groupController.isLoading.value
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : RefreshIndicator(
+                    backgroundColor: Theme.of(context).colorScheme.primary,
+                    color: Theme.of(context).colorScheme.onPrimary,
                     child: groupController.groupList.isNotEmpty
                         ? const GroupsPage()
                         : DefaultHomeScreen(

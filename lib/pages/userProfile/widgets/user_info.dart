@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/model/user_model.dart';
-import 'package:flutter_chat_app/pages/userProfile/widgets/call_buttons.dart';
+import 'package:flutter_chat_app/widgets/call_buttons.dart';
 
 import '../../../config/images.dart';
 
@@ -9,13 +9,13 @@ class UserInfo extends StatelessWidget {
   final String profileImage;
   final String name;
   final String email;
-  final UserModel userModel;
-  const UserInfo(
-      {super.key,
-      required this.profileImage,
-      required this.name,
-      required this.email,
-      required this.userModel});
+
+  const UserInfo({
+    super.key,
+    required this.profileImage,
+    required this.name,
+    required this.email,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,49 +29,25 @@ class UserInfo extends StatelessWidget {
         padding: const EdgeInsets.all(15.0),
         child: Column(
           children: [
-            userModel.profileImage != null && userModel.profileImage != ''
-                ? CachedNetworkImage(
-                    imageUrl: userModel.profileImage!,
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        height: 120,
-                        width: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                    fit: BoxFit.cover,
-                  )
-                : CachedNetworkImage(
-                    imageUrl: AssetsImage.userImg,
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        height: 120,
-                        width: 120,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                    fit: BoxFit.cover,
+            CachedNetworkImage(
+              imageUrl: profileImage,
+              imageBuilder: (context, imageProvider) {
+                return Container(
+                  height: 120,
+                  width: 120,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image: imageProvider,
+                      fit: BoxFit.cover,
+                    ),
                   ),
+                );
+              },
+              placeholder: (context, url) => const CircularProgressIndicator(),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+              fit: BoxFit.cover,
+            ),
             const SizedBox(height: 20),
             Text(
               name,
