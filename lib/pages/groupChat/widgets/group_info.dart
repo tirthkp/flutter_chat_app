@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/model/group_chat_model.dart';
-import 'package:flutter_chat_app/pages/userProfile/widgets/user_info.dart';
+import 'package:flutter_chat_app/model/user_model.dart';
+import 'package:flutter_chat_app/pages/Chat/chat_page.dart';
+import 'package:flutter_chat_app/pages/groupChat/widgets/info_container.dart';
 import 'package:flutter_chat_app/widgets/chat_tile.dart';
 import 'package:get/get.dart';
 
@@ -40,7 +42,9 @@ class GroupInfo extends StatelessWidget {
           physics: const ClampingScrollPhysics(),
           shrinkWrap: true,
           children: [
-            UserInfo(
+            InfoContainer(
+              groupId: groupModel.id!,
+              user: UserModel(),
               profileImage: groupModel.profileImage == '' ||
                       groupModel.profileImage == null
                   ? AssetsImage.groupImg
@@ -58,9 +62,12 @@ class GroupInfo extends StatelessWidget {
               shrinkWrap: true,
               children: groupModel.members!.map((e) {
                 return ChatTile(
+                    ontap: () {
+                      Get.to(ChatPage(userModel: e));
+                    },
                     title: e.name!,
                     imageUrl: e.profileImage == '' || e.profileImage == null
-                        ? AssetsImage.groupImg
+                        ? AssetsImage.userImg
                         : e.profileImage!,
                     subTitle: e.about == '' || e.about == null
                         ? "Hey there,I am using chat app"

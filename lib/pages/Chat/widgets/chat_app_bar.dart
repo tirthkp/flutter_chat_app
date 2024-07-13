@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/controller/chat_controller.dart';
 import 'package:flutter_chat_app/model/user_model.dart';
 import 'package:get/get.dart';
 
@@ -15,6 +16,7 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    ChatController chatController = Get.put(ChatController());
     return AppBar(
       bottom: const PreferredSize(
           preferredSize: Size.fromHeight(5), child: SizedBox.shrink()),
@@ -80,10 +82,18 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           userModel.name ?? 'User',
           style: Theme.of(context).textTheme.bodyLarge,
         ),
-        subtitle: Text(
-          'Online',
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
+        subtitle: StreamBuilder(
+            stream: chatController.getStatus(userModel.id!),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Text('');
+              } else {
+                return Text(
+                  snapshot.data!.status ?? "",
+                  style: Theme.of(context).textTheme.labelMedium,
+                );
+              }
+            }),
       ),
       actions: [
         IconButton(

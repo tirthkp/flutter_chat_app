@@ -6,19 +6,21 @@ class ChatTile extends StatelessWidget {
   final String imageUrl;
   final String subTitle;
   final String time;
+  final VoidCallback ontap;
   const ChatTile(
       {super.key,
       required this.title,
       required this.imageUrl,
       required this.subTitle,
-      required this.time});
+      required this.time,
+      required this.ontap});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
       child: ListTile(
-        onTap: () {},
+        onTap: ontap,
         horizontalTitleGap: 15,
         leading: CachedNetworkImage(
           imageUrl: imageUrl,

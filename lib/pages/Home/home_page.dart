@@ -8,6 +8,7 @@ import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/group_controller.dart';
 import 'package:flutter_chat_app/controller/home_controller.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
+import 'package:flutter_chat_app/controller/status_controller.dart';
 import 'package:flutter_chat_app/pages/Groups/groups_page.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/chat_list.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/default_home_screen.dart';
@@ -33,6 +34,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   ContactController contactController = Get.put(ContactController());
   HomeController homeController = Get.put(HomeController());
   GroupController groupController = Get.put(GroupController());
+  StatusController statusController = Get.put(StatusController());
   @override
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 3, vsync: this);

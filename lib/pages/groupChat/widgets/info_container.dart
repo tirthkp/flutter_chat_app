@@ -1,21 +1,30 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/controller/group_controller.dart';
 import 'package:flutter_chat_app/widgets/call_buttons.dart';
+import 'package:get/get.dart';
 
-class UserInfo extends StatelessWidget {
+import '../../../model/user_model.dart';
+
+class InfoContainer extends StatelessWidget {
   final String profileImage;
   final String name;
   final String email;
+  final String groupId;
+  final UserModel user;
 
-  const UserInfo({
+  const InfoContainer({
     super.key,
     required this.profileImage,
     required this.name,
     required this.email,
+    required this.groupId,
+    required this.user,
   });
 
   @override
   Widget build(BuildContext context) {
+    GroupController groupController = Get.put(GroupController());
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -63,7 +72,7 @@ class UserInfo extends StatelessWidget {
                   name: 'Call',
                   size: 30,
                   ontap: () {},
-                  color: Colors.green.withOpacity(0.5),
+                  color: Colors.orange.withOpacity(0.5),
                 ),
                 CallButton(
                   icon: Icons.videocam_outlined,
@@ -73,11 +82,13 @@ class UserInfo extends StatelessWidget {
                   color: Colors.blue.withOpacity(0.5),
                 ),
                 CallButton(
-                  icon: Icons.chat_bubble_outline,
-                  name: 'Chat',
+                  icon: Icons.person_add_alt_1_outlined,
+                  name: 'Add',
                   size: 25,
-                  ontap: () {},
-                  color: Colors.red.withOpacity(0.5),
+                  ontap: () {
+                    groupController.addMember(groupId, user);
+                  },
+                  color: Colors.green.withOpacity(0.5),
                 ),
               ],
             ),
