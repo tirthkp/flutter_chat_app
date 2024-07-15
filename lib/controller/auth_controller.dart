@@ -66,6 +66,9 @@ class AuthController extends GetxController {
   }
 
   Future<void> logoutUser() async {
+    await db.collection("users").doc(auth.currentUser!.uid).update({
+      "status": "offline",
+    });
     await auth.signOut();
     Get.offAllNamed('/authPage');
   }

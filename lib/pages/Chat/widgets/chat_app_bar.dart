@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/controller/call_controller.dart';
 import 'package:flutter_chat_app/controller/chat_controller.dart';
+import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/model/user_model.dart';
 import 'package:get/get.dart';
 
@@ -17,6 +19,8 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     ChatController chatController = Get.put(ChatController());
+    CallController callController = Get.put(CallController());
+    ProfileController profileController = Get.put(ProfileController());
     return AppBar(
       bottom: const PreferredSize(
           preferredSize: Size.fromHeight(5), child: SizedBox.shrink()),
@@ -104,7 +108,12 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            callController.callAction(
+              userModel,
+              profileController.currentUser.value,
+            );
+          },
           icon: const Icon(
             Icons.phone_outlined,
           ),
