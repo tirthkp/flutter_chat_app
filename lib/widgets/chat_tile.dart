@@ -56,7 +56,7 @@ class ChatTile extends StatelessWidget {
         tileColor: Theme.of(context).colorScheme.primaryContainer,
         trailing: Text(
           time,
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: Theme.of(context).textTheme.labelLarge,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),

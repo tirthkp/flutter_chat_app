@@ -11,13 +11,11 @@ import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/controller/status_controller.dart';
 import 'package:flutter_chat_app/pages/Groups/groups_page.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/chat_list.dart';
-import 'package:flutter_chat_app/pages/Home/widgets/default_home_screen.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/tab_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 
 import '../../controller/profile_controller.dart';
-import '../Groups/newGroup/new_group.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -76,60 +74,23 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
           ],
           bottom: myTabBar(tabController, context),
         ),
-        floatingActionButton: homeController.chatRoomList.isEmpty
-            ? null
-            : FloatingActionButton(
-                elevation: 0,
-                onPressed: () async {
-                  Get.toNamed('/contactPage');
-                  await contactController.getUserList();
-                },
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: const Icon(
-                  Icons.add,
-                  color: Colors.white,
-                ),
-              ),
+        floatingActionButton: FloatingActionButton(
+          elevation: 0,
+          onPressed: () async {
+            Get.toNamed('/contactPage');
+            await contactController.getUserList();
+          },
+          backgroundColor: Theme.of(context).colorScheme.primary,
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
         body: TabBarView(
           controller: tabController,
           children: [
-            contactController.isLoading.value
-                ? const Center(child: CircularProgressIndicator.adaptive())
-                : RefreshIndicator(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    child: homeController.chatRoomList.isNotEmpty
-                        ? const ChatList()
-                        : DefaultHomeScreen(
-                            text: 'Start Chatting...',
-                            buttonText: 'Contacts',
-                            onTap: () async {
-                              Get.toNamed('/contactPage');
-                              await contactController.getUserList();
-                            },
-                          ),
-                    onRefresh: () async {
-                      await Future.delayed(const Duration(seconds: 2));
-                      await homeController.getChatRoomList();
-                    }),
-            groupController.isLoading.value
-                ? const Center(child: CircularProgressIndicator.adaptive())
-                : RefreshIndicator(
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    color: Theme.of(context).colorScheme.onPrimary,
-                    child: groupController.groupList.isNotEmpty
-                        ? const GroupsPage()
-                        : DefaultHomeScreen(
-                            text: 'No groups here...',
-                            buttonText: 'Create Group',
-                            onTap: () {
-                              Get.to(() => const NewGroup(),
-                                  transition: Transition.rightToLeft);
-                            }),
-                    onRefresh: () async {
-                      await Future.delayed(const Duration(seconds: 2));
-                      await groupController.getGroups();
-                    }),
+            const ChatList(),
+            const GroupsPage(),
             ListView(
               children: const [
                 ListTile(

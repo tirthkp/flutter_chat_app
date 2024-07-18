@@ -1,9 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
+import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/group_controller.dart';
+import 'package:flutter_chat_app/pages/Groups/newGroup/new_group.dart';
 import 'package:flutter_chat_app/pages/groupChat/group_chat.dart';
+import 'package:flutter_chat_app/widgets/chat_tile.dart';
 import 'package:get/get.dart';
+
+import '../Home/widgets/default_home_screen.dart';
 
 class GroupsPage extends StatelessWidget {
   const GroupsPage({super.key});
@@ -11,70 +15,57 @@ class GroupsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     GroupController groupController = Get.put(GroupController());
-    return Obx(
-      () => ListView(
-        children: groupController.groupList
-            .map(
-              (e) => Padding(
+    ContactController contactController = Get.put(ContactController());
+    return StreamBuilder(
+      stream: groupController.getGroups(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Padding(
                 padding: const EdgeInsets.only(top: 8.0, right: 8, left: 8),
-                child: ListTile(
-                  onTap: () {
+                child: ChatTile(
+                  title: snapshot.data![index].name ?? '',
+                  imageUrl: snapshot.data![index].profileImage == '' ||
+                          snapshot.data![index].profileImage == null
+                      ? AssetsImage.groupImg
+                      : snapshot.data![index].profileImage!,
+                  subTitle: snapshot.data![index].lastMessage == '' ||
+                          snapshot.data![index].lastMessage == null
+                      ? 'Group chat'
+                      : snapshot.data![index].lastMessage!,
+                  time: snapshot.data![index].lastMessageTime == null ||
+                          snapshot.data![index].lastMessageTime == ''
+                      ? ''
+                      : snapshot.data![index].lastMessageTime!,
+                  ontap: () {
                     Get.to(() => GroupChat(
-                          groupModel: e,
+                          groupModel: snapshot.data![index],
                         ));
                   },
-                  horizontalTitleGap: 15,
-                  leading: CachedNetworkImage(
-                    imageUrl: e.profileImage == '' || e.profileImage == null
-                        ? AssetsImage.groupImg
-                        : e.profileImage!,
-                    imageBuilder: (context, imageProvider) {
-                      return Container(
-                        height: 60,
-                        width: 60,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          image: DecorationImage(
-                            image: imageProvider,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
-                    placeholder: (context, url) =>
-                        const CircularProgressIndicator(),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                    fit: BoxFit.cover,
-                  ),
-                  title: Text(
-                    e.name ?? '',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                    overflow: TextOverflow.clip,
-                    maxLines: 1,
-                  ),
-                  subtitle: Text(
-                    e.lastMessage == '' || e.lastMessage == null
-                        ? 'Group chat'
-                        : e.lastMessage!,
-                    style: Theme.of(context).textTheme.labelMedium,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  tileColor: Theme.of(context).colorScheme.primaryContainer,
-                  trailing: Text(
-                      e.lastMessageTime == null || e.lastMessageTime == ''
-                          ? ''
-                          : e.lastMessageTime!,
-                      style: Theme.of(context).textTheme.bodyMedium),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
                 ),
-              ),
-            )
-            .toList(),
-      ),
+              );
+            },
+          );
+        } else {
+          return DefaultHomeScreen(
+            text: 'No Groups here...',
+            buttonText: 'New Group',
+            onTap: () async {
+              Get.to(() => const NewGroup());
+              await contactController.getUserList();
+            },
+          );
+        }
+      },
     );
   }
 }

@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_chat_app/model/audio_call_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_chat_app/model/call_model.dart';
+import 'package:flutter_chat_app/pages/CallPage/audio_call_page.dart';
+import 'package:flutter_chat_app/pages/CallPage/video_call.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
@@ -14,16 +17,88 @@ class CallController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getCallsNotification().listen((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        Get.snackbar("Calling", 'Calling');
+    getCallsNotification().listen((
+      List<CallModel> callList,
+    ) {
+      if (callList.isNotEmpty) {
+        var callData = callList[0];
+        if (callData.type == 'audio') {
+          audioCallNotification(callData);
+        } else if (callData.type == 'video') {
+          videoCallNotification(callData);
+        }
       }
     });
   }
 
-  Future<void> callAction(UserModel receiver, UserModel caller) async {
+  Future<void> videoCallNotification(CallModel callData) async {
+    Get.snackbar(
+      callData.callerName!,
+      'incoming video call',
+      backgroundColor: Colors.grey,
+      duration: const Duration(days: 1),
+      barBlur: 0,
+      isDismissible: false,
+      icon: const Icon(Icons.videocam),
+      onTap: (snack) {
+        Get.back();
+        Get.to(
+          VideoCall(
+            target: UserModel(
+              id: callData.callerId,
+              name: callData.callerName,
+              email: callData.callerEmail,
+              profileImage: callData.callerPic,
+            ),
+          ),
+        );
+      },
+      mainButton: TextButton(
+        onPressed: () {
+          endCall(callData);
+          Get.back();
+        },
+        child: const Text('End Call'),
+      ),
+    );
+  }
+
+  Future<void> audioCallNotification(CallModel callData) async {
+    Get.snackbar(
+      callData.callerName!,
+      'incoming audio call',
+      backgroundColor: Colors.grey,
+      duration: const Duration(days: 1),
+      barBlur: 0,
+      isDismissible: false,
+      icon: const Icon(Icons.call),
+      onTap: (snack) {
+        Get.back();
+        Get.to(
+          AudioCallPage(
+            target: UserModel(
+              id: callData.callerId,
+              name: callData.callerName,
+              email: callData.callerEmail,
+              profileImage: callData.callerPic,
+            ),
+          ),
+        );
+      },
+      mainButton: TextButton(
+        onPressed: () {
+          endCall(callData);
+          Get.back();
+        },
+        child: const Text('End Call'),
+      ),
+    );
+  }
+
+  Future<void> callAction(
+      UserModel receiver, UserModel caller, String type) async {
     String id = uuid;
-    var newCall = AudioCallModel(
+    var newCall = CallModel(
       id: id,
       callerName: caller.name,
       callerPic: caller.profileImage,
@@ -34,6 +109,7 @@ class CallController extends GetxController {
       receiverPic: receiver.profileImage,
       receiverId: receiver.id,
       status: "dialing",
+      type: type,
     );
 
     try {
@@ -63,15 +139,17 @@ class CallController extends GetxController {
     }
   }
 
-  Stream<QuerySnapshot> getCallsNotification() {
+  Stream<List<CallModel>> getCallsNotification() {
     return db
         .collection('notification')
         .doc(auth.currentUser!.uid)
         .collection('call')
-        .snapshots();
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((e) => CallModel.fromJson(e.data())).toList());
   }
 
-  Future<void> endCall(AudioCallModel call) async {
+  Future<void> endCall(CallModel call) async {
     try {
       await db
           .collection('notification')

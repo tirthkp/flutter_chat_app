@@ -1,4 +1,4 @@
-class AudioCallModel {
+class CallModel {
   String? id;
   String? callerName;
   String? callerId;
@@ -9,8 +9,9 @@ class AudioCallModel {
   String? receiverEmail;
   String? receiverPic;
   String? status;
+  String? type;
 
-  AudioCallModel(
+  CallModel(
       {this.id,
       this.callerName,
       this.callerId,
@@ -20,9 +21,10 @@ class AudioCallModel {
       this.receiverId,
       this.receiverEmail,
       this.receiverPic,
-      this.status});
+      this.status,
+      this.type});
 
-  AudioCallModel.fromJson(Map<String, dynamic> json) {
+  CallModel.fromJson(Map<String, dynamic> json) {
     id = json["id"];
     callerName = json["callerName"];
     callerId = json["callerId"];
@@ -33,6 +35,7 @@ class AudioCallModel {
     receiverEmail = json["receiverEmail"];
     receiverPic = json["receiverPic"];
     status = json["status"];
+    type = json["type"];
   }
 
   Map<String, dynamic> toJson() {
@@ -47,6 +50,7 @@ class AudioCallModel {
     data["receiverEmail"] = receiverEmail;
     data["receiverPic"] = receiverPic;
     data["status"] = status;
+    data["type"] = type;
     return data;
   }
 }

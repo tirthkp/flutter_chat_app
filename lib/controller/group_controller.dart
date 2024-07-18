@@ -19,14 +19,8 @@ class GroupController extends GetxController {
   ImageController imagecontroller = Get.put(ImageController());
   ProfileController profileController = Get.put(ProfileController());
   RxBool isLoading = false.obs;
-  RxList<GroupModel> groupList = <GroupModel>[].obs;
+  // RxList<GroupModel> groupList = <GroupModel>[].obs;
   RxString selectedImagePath = ''.obs;
-
-  @override
-  void onInit() async {
-    super.onInit();
-    await getGroups();
-  }
 
   void selectMember(UserModel user) {
     if (groupMembers.contains(user)) {
@@ -70,31 +64,43 @@ class GroupController extends GetxController {
     isLoading.value = false;
   }
 
-  Future<void> getGroups() async {
-    isLoading.value = true;
-    List<GroupModel> tempGroup = [];
-    try {
-      await db.collection('groups').get().then(
-        (value) {
-          tempGroup = value.docs
-              .map(
-                (e) => GroupModel.fromJson(e.data()),
-              )
-              .toList();
-        },
-      );
-      groupList.clear();
-      groupList.value = tempGroup.where((group) {
-        final isCreator = group.createdBy == auth.currentUser!.uid;
-        final isMember =
-            group.members!.any((member) => member.id == auth.currentUser!.uid);
-        return isCreator || isMember;
-      }).toList();
-    } catch (e) {
-      print(e);
-    }
-    isLoading.value = false;
+  Stream<List<GroupModel>> getGroups() {
+    return db.collection('groups').snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => GroupModel.fromJson(doc.data()))
+          .where((group) => group.members!
+              .any((member) => member.id == auth.currentUser!.uid))
+          .toList();
+    }).handleError((error) {
+      print(error);
+    });
   }
+
+  // Future<void> getGroups() async {
+  //   isLoading.value = true;
+  //   List<GroupModel> tempGroup = [];
+  //   try {
+  //     await db.collection('groups').get().then(
+  //       (value) {
+  //         tempGroup = value.docs
+  //             .map(
+  //               (e) => GroupModel.fromJson(e.data()),
+  //             )
+  //             .toList();
+  //       },
+  //     );
+  //     groupList.clear();
+  //     groupList.value = tempGroup.where((group) {
+  //       final isCreator = group.createdBy == auth.currentUser!.uid;
+  //       final isMember =
+  //           group.members!.any((member) => member.id == auth.currentUser!.uid);
+  //       return isCreator || isMember;
+  //     }).toList();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  //   isLoading.value = false;
+  // }
 
   Stream<List<ChatModel>> getGroupMessages(String groupId) {
     print(selectedImagePath);

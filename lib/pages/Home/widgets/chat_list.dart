@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/config/images.dart';
 import 'package:flutter_chat_app/controller/chat_controller.dart';
@@ -6,6 +5,8 @@ import 'package:flutter_chat_app/controller/contact_controller.dart';
 import 'package:flutter_chat_app/controller/home_controller.dart';
 
 import 'package:flutter_chat_app/controller/profile_controller.dart';
+import 'package:flutter_chat_app/pages/Home/widgets/default_home_screen.dart';
+import 'package:flutter_chat_app/widgets/chat_tile.dart';
 import 'package:get/get.dart';
 
 import '../../Chat/chat_page.dart';
@@ -21,105 +22,63 @@ class ChatList extends StatelessWidget {
     ChatController chatController = Get.put(ChatController());
     HomeController homeController = Get.put(HomeController());
     ProfileController profileController = Get.put(ProfileController());
-    return Obx(
-      () => ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        children: homeController.chatRoomList.map(
-          (e) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 5.0, horizontal: 8),
-              child: ListTile(
-                onTap: () {
+    ContactController contactController = Get.put(ContactController());
+    return StreamBuilder(
+      stream: homeController.getChatList(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator();
+        }
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
+
+        if (snapshot.hasData || snapshot.data!.isNotEmpty) {
+          return ListView.builder(
+            itemCount: snapshot.data!.length,
+            itemBuilder: (context, index) {
+              return ChatTile(
+                title: (snapshot.data![index].receiver!.id ==
+                        profileController.currentUser.value.id
+                    ? snapshot.data![index].sender!.name
+                    : snapshot.data![index].receiver!.name)!,
+                imageUrl: snapshot.data![index].receiver!.profileImage !=
+                                null &&
+                            snapshot.data![index].receiver!.profileImage !=
+                                '' ||
+                        snapshot.data![index].sender!.profileImage != null &&
+                            snapshot.data![index].sender!.profileImage != ''
+                    ? chatController.imgUrl(snapshot.data![index])
+                    : AssetsImage.userImg,
+                subTitle: snapshot.data![index].lastMessage != null &&
+                        snapshot.data![index].lastMessage != ''
+                    ? snapshot.data![index].lastMessage!
+                    : "Hey there",
+                time: snapshot.data![index].lastMessageTime!,
+                ontap: () {
                   Get.to(
                       () => ChatPage(
-                            userModel: e.receiver!.id ==
+                            userModel: snapshot.data![index].receiver!.id ==
                                     profileController.currentUser.value.id
-                                ? e.sender!
-                                : e.receiver!,
+                                ? snapshot.data![index].sender!
+                                : snapshot.data![index].receiver!,
                           ),
                       transition: Transition.rightToLeft);
-                  chatController.getRoomId(e.id!);
+                  chatController.getRoomId(snapshot.data![index].id!);
                 },
-                horizontalTitleGap: 15,
-                leading: e.receiver!.profileImage != null &&
-                            e.receiver!.profileImage != '' ||
-                        e.sender!.profileImage != null &&
-                            e.sender!.profileImage != ''
-                    ? CachedNetworkImage(
-                        imageUrl: chatController.imgUrl(e),
-                        imageBuilder: (context, imageProvider) {
-                          return Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        },
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.cover,
-                      )
-                    : CachedNetworkImage(
-                        imageUrl: AssetsImage.userImg,
-                        imageBuilder: (context, imageProvider) {
-                          return Container(
-                            height: 60,
-                            width: 60,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              image: DecorationImage(
-                                image: imageProvider,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          );
-                        },
-                        placeholder: (context, url) =>
-                            const CircularProgressIndicator(),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.error),
-                        fit: BoxFit.cover,
-                      ),
-                title: Text(
-                  (e.receiver!.id == profileController.currentUser.value.id
-                      ? e.sender!.name
-                      : e.receiver!.name)!,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                  overflow: TextOverflow.clip,
-                  maxLines: 1,
-                ),
-                subtitle: Text(
-                  e.lastMessage != null && e.lastMessage != ''
-                      ? e.lastMessage!
-                      : "Hey there",
-                  style: Theme.of(context).textTheme.labelLarge,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                tileColor: Theme.of(context).colorScheme.primaryContainer,
-                trailing: Text(
-                  e.receiver!.email == e.sender!.email
-                      ? 'you'
-                      : e.lastMessageTime!,
-                  style: e.receiver!.email == e.sender!.email
-                      ? Theme.of(context).textTheme.bodyMedium
-                      : Theme.of(context).textTheme.labelMedium,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            );
-          },
-        ).toList(),
-      ),
+              );
+            },
+          );
+        } else {
+          return DefaultHomeScreen(
+              text: 'Start chatting...',
+              onTap: () async {
+                Get.toNamed('/contactPage');
+                await contactController.getUserList();
+              },
+              buttonText: 'Contacts');
+        }
+      },
     );
   }
 }

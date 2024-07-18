@@ -47,7 +47,7 @@ class GroupDetails extends StatelessWidget {
                 backgroundColor: Theme.of(context).colorScheme.surface,
                 colorText: Theme.of(context).colorScheme.onSurface,
               );
-              await groupController.getGroups();
+              groupController.getGroups();
               Get.offAllNamed('/homePage');
             } else {
               Get.snackbar("Error", "Please enter group name",

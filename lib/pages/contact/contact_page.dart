@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_app/controller/contact_controller.dart';
-import 'package:flutter_chat_app/controller/home_controller.dart';
 import 'package:flutter_chat_app/pages/Groups/newGroup/new_group.dart';
 import 'package:flutter_chat_app/pages/contact/widgets/contact_list.dart';
 import 'package:flutter_chat_app/pages/contact/widgets/new_contact_tile.dart';
@@ -19,9 +18,7 @@ class ContactPage extends StatelessWidget {
         scrolledUnderElevation: 0,
         leading: IconButton(
             onPressed: () async {
-              HomeController homeController = Get.put(HomeController());
               Get.back();
-              await homeController.getChatRoomList();
             },
             icon: const Icon(Icons.arrow_back_ios_new)),
         title: const Text('Select Contacts'),

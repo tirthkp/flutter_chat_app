@@ -4,6 +4,8 @@ import 'package:flutter_chat_app/controller/call_controller.dart';
 import 'package:flutter_chat_app/controller/chat_controller.dart';
 import 'package:flutter_chat_app/controller/profile_controller.dart';
 import 'package:flutter_chat_app/model/user_model.dart';
+import 'package:flutter_chat_app/pages/CallPage/audio_call_page.dart';
+import 'package:flutter_chat_app/pages/CallPage/video_call.dart';
 import 'package:get/get.dart';
 
 import '../../../config/images.dart';
@@ -101,7 +103,14 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.to(VideoCall(target: userModel));
+            callController.callAction(
+              userModel,
+              profileController.currentUser.value,
+              'video',
+            );
+          },
           icon: const Icon(
             Icons.videocam_outlined,
             size: 30,
@@ -109,9 +118,11 @@ class ChatAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         IconButton(
           onPressed: () {
+            Get.to(AudioCallPage(target: userModel));
             callController.callAction(
               userModel,
               profileController.currentUser.value,
+              'audio',
             );
           },
           icon: const Icon(
