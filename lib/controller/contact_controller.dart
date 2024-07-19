@@ -12,11 +12,27 @@ class ContactController extends GetxController {
   RxList<UserModel> userList = <UserModel>[].obs;
   RxBool isLoading = false.obs;
   RxList<ChatRoomModel> chatRoomList = <ChatRoomModel>[].obs;
+  RxString search = ''.obs;
 
   @override
   void onInit() async {
     super.onInit();
     await getUserList();
+  }
+
+  Stream<List<UserModel>> getContactList() {
+    return db.collection("users").snapshots().map(
+          (event) => event.docs
+              .map(
+                (e) => UserModel.fromJson(
+                  e.data(),
+                ),
+              )
+              .where(
+                (element) => element.name!.contains(search.value),
+              )
+              .toList(),
+        );
   }
 
   Future<void> getUserList() async {
@@ -55,12 +71,7 @@ class ContactController extends GetxController {
   }
 
   Stream<List<UserModel>> getContacts() {
-    return db
-        .collection("users")
-        // .doc(auth.currentUser!.uid)
-        // .collection("contacts")
-        .snapshots()
-        .map(
+    return db.collection("users").snapshots().map(
           (snapshot) => snapshot.docs
               .map(
                 (doc) => UserModel.fromJson(doc.data()),
