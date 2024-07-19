@@ -9,6 +9,7 @@ import 'package:flutter_chat_app/controller/group_controller.dart';
 import 'package:flutter_chat_app/controller/home_controller.dart';
 import 'package:flutter_chat_app/controller/image_controller.dart';
 import 'package:flutter_chat_app/controller/status_controller.dart';
+import 'package:flutter_chat_app/pages/Calls/call_page.dart';
 import 'package:flutter_chat_app/pages/Groups/groups_page.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/chat_list.dart';
 import 'package:flutter_chat_app/pages/Home/widgets/tab_bar.dart';
@@ -36,70 +37,62 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     TabController tabController = TabController(length: 3, vsync: this);
-    return Obx(
-      () => Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          title: Text(
-            AppStrings.appName,
-            style: Theme.of(context).textTheme.headlineSmall,
-          ),
-          leading: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SvgPicture.asset(
-              AssetsImage.appIcon,
-            ),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                ThemeService().changeThemeMode();
-              },
-              icon: Icon(
-                Get.isDarkMode
-                    ? Icons.light_mode_outlined
-                    : Icons.dark_mode_outlined,
-                size: 30,
-              ),
-            ),
-            IconButton(
-              onPressed: () async {
-                Get.toNamed('/profilePage');
-              },
-              icon: const Icon(
-                Icons.person_2_outlined,
-                size: 30,
-              ),
-            ),
-          ],
-          bottom: myTabBar(tabController, context),
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        title: Text(
+          AppStrings.appName,
+          style: Theme.of(context).textTheme.headlineSmall,
         ),
-        floatingActionButton: FloatingActionButton(
-          elevation: 0,
-          onPressed: () async {
-            Get.toNamed('/contactPage');
-            await contactController.getUserList();
-          },
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          child: const Icon(
-            Icons.add,
-            color: Colors.white,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SvgPicture.asset(
+            AssetsImage.appIcon,
           ),
         ),
-        body: TabBarView(
-          controller: tabController,
-          children: [
-            const ChatList(),
-            const GroupsPage(),
-            ListView(
-              children: const [
-                ListTile(
-                  title: Text('Calls'),
-                ),
-              ],
+        actions: [
+          IconButton(
+            onPressed: () {
+              ThemeService().changeThemeMode();
+            },
+            icon: Icon(
+              Get.isDarkMode
+                  ? Icons.light_mode_outlined
+                  : Icons.dark_mode_outlined,
+              size: 30,
             ),
-          ],
+          ),
+          IconButton(
+            onPressed: () async {
+              Get.toNamed('/profilePage');
+            },
+            icon: const Icon(
+              Icons.person_2_outlined,
+              size: 30,
+            ),
+          ),
+        ],
+        bottom: myTabBar(tabController, context),
+      ),
+      floatingActionButton: FloatingActionButton(
+        elevation: 0,
+        onPressed: () async {
+          Get.toNamed('/contactPage');
+          await contactController.getUserList();
+        },
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
         ),
+      ),
+      body: TabBarView(
+        controller: tabController,
+        children: const [
+          ChatList(),
+          GroupsPage(),
+          CallPage(),
+        ],
       ),
     );
   }

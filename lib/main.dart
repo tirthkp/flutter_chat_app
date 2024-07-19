@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable
-
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +5,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_chat_app/config/page_path.dart';
 import 'package:flutter_chat_app/config/theme/theme_service.dart';
 import 'package:flutter_chat_app/config/theme/themes.dart';
-import 'package:flutter_chat_app/controller/call_controller.dart';
 import 'package:flutter_chat_app/firebase_options.dart';
 import 'package:flutter_chat_app/pages/splashPage/splash_page.dart';
 import 'package:get/get.dart';
@@ -28,12 +25,16 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
   Widget build(BuildContext context) {
-    CallController callController = Get.put(CallController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Chat App',

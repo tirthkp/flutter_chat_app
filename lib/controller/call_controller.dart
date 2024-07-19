@@ -5,6 +5,7 @@ import 'package:flutter_chat_app/model/call_model.dart';
 import 'package:flutter_chat_app/pages/CallPage/audio_call_page.dart';
 import 'package:flutter_chat_app/pages/CallPage/video_call.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../model/user_model.dart';
@@ -110,6 +111,8 @@ class CallController extends GetxController {
       receiverId: receiver.id,
       status: "dialing",
       type: type,
+      time: DateFormat('HH:mm a').format(DateTime.now()),
+      timeStamp: DateTime.now().toString(),
     );
 
     try {
@@ -140,9 +143,10 @@ class CallController extends GetxController {
   }
 
   Stream<List<CallModel>> getCallsNotification() {
+    String user = auth.currentUser!.uid;
     return db
         .collection('notification')
-        .doc(auth.currentUser!.uid)
+        .doc(user)
         .collection('call')
         .snapshots()
         .map((snapshot) =>
@@ -160,5 +164,21 @@ class CallController extends GetxController {
     } catch (e) {
       print(e);
     }
+  }
+
+  Stream<List<CallModel>> getCalls() {
+    return db
+        .collection('users')
+        .doc(auth.currentUser!.uid)
+        .collection("calls")
+        .orderBy("timeStamp", descending: true)
+        .snapshots()
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (e) => CallModel.fromJson(e.data()),
+              )
+              .toList(),
+        );
   }
 }

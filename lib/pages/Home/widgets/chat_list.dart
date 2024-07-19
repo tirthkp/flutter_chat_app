@@ -27,13 +27,13 @@ class ChatList extends StatelessWidget {
       stream: homeController.getChatList(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
+          return const Center(child: CircularProgressIndicator());
         }
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
 
-        if (snapshot.hasData || snapshot.data!.isNotEmpty) {
+        if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           return ListView.builder(
             itemCount: snapshot.data!.length,
             itemBuilder: (context, index) {
@@ -54,7 +54,7 @@ class ChatList extends StatelessWidget {
                         snapshot.data![index].lastMessage != ''
                     ? snapshot.data![index].lastMessage!
                     : "Hey there",
-                time: snapshot.data![index].lastMessageTime!,
+                time: snapshot.data![index].lastMessageTime ?? "",
                 ontap: () {
                   Get.to(
                       () => ChatPage(
